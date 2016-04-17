@@ -1,3 +1,11 @@
 import React from 'react';
 
-export default () => <div>Learn Webpack</div>;
+export default class Note extends React.Component {
+  render() {
+    return (
+      <div>
+        of q c whore. cutie?
+      </div>
+    );
+  }
+}
