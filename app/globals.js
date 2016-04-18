@@ -8,7 +8,7 @@ globals.roleIsGood = (role) => {
   return !globals.roleIsEvil(role);
 };
 
-globals.roleListForPlayerCount = (playerCount) => {
+globals.roleNamesForPlayerCount = (playerCount) => {
   let roleNames = ['Merlin', 'Morgana', 'Percival', 'Assassin', 'Villager'];
   if (playerCount >= 6) {
     roleNames.push('Villager');

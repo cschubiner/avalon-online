@@ -3,6 +3,7 @@ import Firebase from 'firebase';
 import _ from 'lodash';
 import globals from '../globals.js'
 import RoleList from './RoleList.jsx';
+import YourInfo from './YourInfo.jsx';
 
 const propTypes = {
   roomCode: PropTypes.string.isRequired,
@@ -18,14 +19,23 @@ export default class GameRoom extends React.Component {
     }
   }
 
+  getCurrentPlayer() {
+    return this.props.players.find(p =>
+      p.playerName === this.props.playerName
+    );
+  }
+
   render() {
     return (
       <div>
-        <h1> Game Room </h1>
-        <RoleList
-          playerCount={this.props.players.length}
+        <h1>Game Room</h1>
+        <h2>Your role is: <span className='bold'>{ this.getCurrentPlayer().role }</span></h2>
+        <YourInfo
           players={this.props.players}
           playerName={this.props.playerName}
+        />
+        <RoleList
+          playerCount={this.props.players.length}
         />
       </div>
     );

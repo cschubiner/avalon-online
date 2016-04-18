@@ -90,7 +90,6 @@ export default class App extends React.Component {
   getWaitingRoomScreen() {
     return <JoinRoom
       roomCode={this.state.currentRoomCode}
-      // roomCode={this.state.roomCode}
     />;
   }
 

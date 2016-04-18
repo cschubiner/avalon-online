@@ -16,7 +16,7 @@ export default class WaitingRoom extends React.Component {
     super();
     this.state = {
       players: [],
-      isOnWaitingRoom: true,
+      hasStarted: false,
     }
   }
 
@@ -34,20 +34,33 @@ export default class WaitingRoom extends React.Component {
   }
 
   addCurrentPlayerToFirebase() {
-    const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${this.props.playerName}`);
-    ref.update({
-      playerName: this.props.playerName,
-      isSpectator: this.props.isSpectator,
+    const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/hasStarted`);
+    gameRef.once("value", (snapshot) => {
+      let hasStarted = snapshot.val();
+      if (!hasStarted) {
+        const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${this.props.playerName}`);
+        ref.update({
+          playerName: this.props.playerName,
+          isSpectator: this.props.isSpectator,
+        });
+      }
     });
   }
 
   componentDidMount() {
     this.addCurrentPlayerToFirebase();
     this.populatePlayerState();
+
+    // listen to hasStarted
+    const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/hasStarted`);
+    gameRef.on("value", (snapshot) => {
+      let hasStarted = snapshot.val();
+      this.setState({'hasStarted': hasStarted})
+    });
   }
 
   startGameClicked() {
-    const roleNames = _.shuffle(globals.roleListForPlayerCount(this.state.players.length));
+    const roleNames = _.shuffle(globals.roleNamesForPlayerCount(this.state.players.length));
 
     let i = 0;
     this.state.players.forEach((player) => {
@@ -62,8 +75,6 @@ export default class WaitingRoom extends React.Component {
     const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}`);
     gameRef.update({
       hasStarted: true,
-    }).then(()=> {
-      this.setState({isOnWaitingRoom: false});
     });
   }
 
@@ -126,8 +137,15 @@ export default class WaitingRoom extends React.Component {
   }
 
   render() {
-    if (this.state.isOnWaitingRoom) {
+    if (!this.state.hasStarted) {
       return this.getWaitingRoom();
+    }
+    const currentPlayerExists = this.state.players.find(p => {
+      return p.playerName === this.props.playerName
+    });
+
+    if (!currentPlayerExists) {
+      return <div>Sorry, you cannot join an existing game. Please refresh the page and join a new game</div>;
     }
 
     return this.getGameRoom();
