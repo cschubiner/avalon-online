@@ -1,3 +1,15 @@
 .bold {
   font-weight: bold;
 }
+
+.italics {
+  font-style: italic;
+}
+
+.evil {
+  color: red;
+}
+
+.good {
+  color: blue;
+}

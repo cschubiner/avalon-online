@@ -1,11 +1,11 @@
-var globals = {
-  jizz: () => {
-    return 'hiz';
-  },
+var globals = {};
 
-  jizz2: (x) => {
-    return 'HI: ' + x;
-  }
-}
+globals.roleIsEvil = (role) => {
+  return ['MORGANA', 'ASSASSIN', 'MINION'].includes(role.toUpperCase());
+};
+
+globals.roleIsGood = (role) => {
+  return !globals.roleIsEvil(role);
+};
 
 export default globals;

@@ -60,7 +60,15 @@ export default class WaitingRoom extends React.Component {
       players.push(this.getPlayerRow(playerData));
     });
 
-    return players;
+    return <ul>
+      { players }
+    </ul>;
+  }
+
+  getAdditionalPlayerMessage() {
+    return <div className="italics">
+      Need {5 - this.state.players.length} more players to start
+    </div>;
   }
 
   render() {
@@ -70,12 +78,13 @@ export default class WaitingRoom extends React.Component {
         <p> Go to avalonline.com and enter the room code to join! </p>
         <span>Room Code: </span>
         <span>{this.props.roomCode}</span>
-        <div>
-          { this.getPlayerList() }
-        </div>
+        <h3> Players </h3>
+        { this.getPlayerList() }
         <RoleList
-          players={this.state.players}
+          playerCount={this.state.players.length}
         />
+
+        { this.state.players.length < 5 ? this.getAdditionalPlayerMessage() : null }
         <button type="button" onClick={this.startGameClicked.bind(this)}>
           Start Game
         </button>
