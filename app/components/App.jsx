@@ -55,7 +55,7 @@ export default class App extends React.Component {
       'roomCode': roomCode,
     };
 
-    fbGame.set(roomCodeObj);
+    fbGame.update(roomCodeObj);
     this.setState(roomCodeObj);
   }
 

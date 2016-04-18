@@ -7,6 +7,7 @@ import _ from 'lodash';
 const propTypes = {
   roomCode: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
+  isSpectator: PropTypes.bool.isRequired,
 };
 
 export default class WaitingRoom extends React.Component {
@@ -32,8 +33,9 @@ export default class WaitingRoom extends React.Component {
 
   addCurrentPlayerToFirebase() {
     const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${this.props.playerName}`);
-    ref.set({
+    ref.update({
       playerName: this.props.playerName,
+      isSpectator: this.props.isSpectator,
     });
   }
 
