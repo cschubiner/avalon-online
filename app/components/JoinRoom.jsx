@@ -21,7 +21,7 @@ export default class JoinRoom extends React.Component {
     if (this.state.playerName.length <= 2 || this.state.playerName.length >= 21) {
       alert("Your name must be between 3 and 20 characters.");
     } else {
-      this.setState({ isOnJoinRoom: false, isSpectator: isSpectator })
+      this.setState({ playerName: this.state.playerName.trim(), isOnJoinRoom: false, isSpectator: isSpectator })
     }
   }
 

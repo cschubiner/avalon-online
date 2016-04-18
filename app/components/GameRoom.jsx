@@ -29,7 +29,8 @@ export default class GameRoom extends React.Component {
     return (
       <div>
         <h1>Game Room</h1>
-        <h2>Your role is: <span className='bold'>{ this.getCurrentPlayer().role }</span></h2>
+        <h2>Up name q: <span className='bold'>{ this.props.playerName }</span></h2>
+        <h2>Up role q: <span className='bold'>{ this.getCurrentPlayer().role }</span></h2>
         <YourInfo
           players={this.props.players}
           playerName={this.props.playerName}
