@@ -1,5 +1,5 @@
 import React from 'react';
-import WaitingRoom from './WaitingRoom.jsx';
+import JoinRoom from './JoinRoom.jsx';
 import Firebase from 'firebase';
 import _ from 'lodash';
 
@@ -9,6 +9,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       gameState: "MAIN_MENU",
+      rooms: [],
+      currentRoomCode: null,
     }
   }
 
@@ -23,10 +25,6 @@ export default class App extends React.Component {
         rooms.push(childData);
       });
       this.setState({'rooms': rooms});
-
-      rooms.forEach((hi) => {
-        console.log(hi);
-      })
     });
 
   }
@@ -49,11 +47,16 @@ export default class App extends React.Component {
     this.setState(roomCodeObj);
   }
 
-  joinExistingHandClicked() {
-    this.setState({ gameState: "JOIN_MENU" })
+  joinGameClicked(roomCode) {
+    this.setState({ gameState: "IN_GAME", currentRoomCode: roomCode })
 
-    // let a = fbGame.value();
-    // console.log(a);
+    const fbGame = new Firebase(`https://avalonline.firebaseio.com/games/${roomCode}`);
+    const roomCodeObj = {
+      'roomCode': roomCode,
+    };
+
+    fbGame.set(roomCodeObj);
+    this.setState(roomCodeObj);
   }
 
   getMainMenu() {
@@ -62,10 +65,9 @@ export default class App extends React.Component {
         <button type="button" onClick={this.newGameClicked.bind(this)}>
           New Game
         </button>
-
-        <button type="button" onClick={this.joinExistingHandClicked.bind(this)}>
-          Join Existing Hand
-        </button>
+        <br/>
+        <br/>
+        { this.getRoomList() }
       </div>
     );
   }
@@ -73,7 +75,13 @@ export default class App extends React.Component {
   getRoomList() {
     let rooms = [];
     this.state.rooms.forEach( (roomData) => {
-      rooms.push(<li> { roomData.roomCode } </li>);
+      rooms.push(
+        <div>
+          <button type="button" onClick={this.joinGameClicked.bind(this, roomData.roomCode )}>
+            { roomData.roomCode }
+          </button>
+        </div>
+      );
     });
 
     return rooms;
@@ -88,8 +96,8 @@ export default class App extends React.Component {
   }
 
   getWaitingRoomScreen() {
-    return <WaitingRoom
-      roomCode='jizz'
+    return <JoinRoom
+      roomCode={this.state.roomCode}
       // roomCode={this.state.roomCode}
       playerName='Clay'
     />;
