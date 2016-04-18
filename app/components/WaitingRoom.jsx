@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Firebase from 'firebase';
 import RoleList from './RoleList.jsx';
+import GameRoom from './GameRoom.jsx';
 import globals from '../globals.js'
 import _ from 'lodash';
 
@@ -15,6 +16,7 @@ export default class WaitingRoom extends React.Component {
     super();
     this.state = {
       players: [],
+      isOnWaitingRoom: true,
     }
   }
 
@@ -45,11 +47,6 @@ export default class WaitingRoom extends React.Component {
   }
 
   startGameClicked() {
-    const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}`);
-    gameRef.update({
-      hasStarted: true,
-    });
-
     const roleNames = _.shuffle(globals.roleListForPlayerCount(this.state.players.length));
 
     let i = 0;
@@ -60,6 +57,13 @@ export default class WaitingRoom extends React.Component {
       });
 
       i+=1;
+    });
+
+    const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}`);
+    gameRef.update({
+      hasStarted: true,
+    }).then(()=> {
+      this.setState({isOnWaitingRoom: false});
     });
   }
 
@@ -89,7 +93,7 @@ export default class WaitingRoom extends React.Component {
     </div>;
   }
 
-  render() {
+  getWaitingRoom() {
     return (
       <div>
         <h1> Waiting Room </h1>
@@ -108,6 +112,25 @@ export default class WaitingRoom extends React.Component {
         </button>
       </div>
     );
+  }
+
+  getGameRoom() {
+    return (
+      <GameRoom
+        roomCode={this.props.roomCode}
+        isSpectator={this.props.isSpectator}
+        playerName={this.props.playerName}
+        players={this.state.players}
+      />
+    );
+  }
+
+  render() {
+    if (this.state.isOnWaitingRoom) {
+      return this.getWaitingRoom();
+    }
+
+    return this.getGameRoom();
   }
 }
 

@@ -19,6 +19,15 @@ globals.roleListForPlayerCount = (playerCount) => {
   if (playerCount >= 8) {
     roleNames.push('Villager');
   }
+  if (playerCount >= 9) {
+    roleNames.push('Villager');
+  }
+  if (playerCount >= 10) {
+    roleNames.push('Minion');
+  }
+  for (let i = 11; i <= playerCount; i++) {
+    roleNames.push('Villager');
+  }
 
   return roleNames;
 };
