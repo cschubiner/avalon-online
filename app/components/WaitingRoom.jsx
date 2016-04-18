@@ -15,7 +15,7 @@ export default class WaitingRoom extends React.Component {
     }
   }
 
-  componentDidMount() {
+  populatePlayerState() {
     const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players`);
     ref.on("value", (snapshot) => {
       let players = [];
@@ -28,13 +28,26 @@ export default class WaitingRoom extends React.Component {
     });
   }
 
+  addCurrentPlayerToFirebase() {
+    const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${this.props.playerName}`);
+    ref.set({
+      name: this.props.playerName,
+    });
+  }
+
+  componentDidMount() {
+    this.addCurrentPlayerToFirebase();
+    this.populatePlayerState();
+  }
+
   startGameClicked() {
 
   }
 
   getPlayerRow(playerData) {
+    const isCurrPlayer = playerData.name == this.props.playerName;
     return (
-      <li>
+      <li className={isCurrPlayer ? "currentPlayerRow" : ""}>
         { playerData.name }
       </li>
     );
