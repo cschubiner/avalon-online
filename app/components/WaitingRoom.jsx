@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Firebase from 'firebase';
 import RoleList from './RoleList.jsx';
+import globals from '../globals.js'
 import _ from 'lodash';
 
 const propTypes = {
@@ -61,10 +62,10 @@ export default class WaitingRoom extends React.Component {
   }
 
   getPlayerRow(playerData) {
-    const isCurrPlayer = playerData.name == this.props.playerName;
+    const isCurrPlayer = playerData.playerName == this.props.playerName;
     return (
       <li className={isCurrPlayer ? "bold" : ""}>
-        { playerData.name }
+        { playerData.playerName }
       </li>
     );
   }
