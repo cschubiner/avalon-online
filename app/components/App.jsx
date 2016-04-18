@@ -1,6 +1,7 @@
 import React from 'react';
 import JoinRoom from './JoinRoom.jsx';
 import Firebase from 'firebase';
+import GameRoom from './GameRoom.jsx'; //delete!
 import _ from 'lodash';
 
 export default class App extends React.Component {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
       isOnMainMenu: true,
       rooms: [],
       currentRoomCode: null,
+      players: [], //delete
     }
   }
 
@@ -26,6 +28,7 @@ export default class App extends React.Component {
       this.setState({'rooms': rooms});
     });
 
+    this.populatePlayerState(); //delete!
   }
 
   getNewRoomCode() {
@@ -87,6 +90,32 @@ export default class App extends React.Component {
     return rooms;
   }
 
+  //delete vvvvvv -----------------------------------------------------------------------------------------------
+  populatePlayerState() {
+    const ref = new Firebase(`https://avalonline.firebaseio.com/games/cary/players`);
+    ref.on("value", (snapshot) => {
+      let players = [];
+      snapshot.forEach((childSnapshot) => {
+        let key = childSnapshot.key();
+        let childData = childSnapshot.val();
+        players.push(childData);
+      });
+      this.setState({'players': players});
+    });
+  }
+  getGameRoom() {
+    if (this.state.players.length < 3) return null;
+    return (
+      <GameRoom
+        roomCode='cary'
+        isSpectator={false}
+        playerName='CLAY'
+        players={this.state.players}
+      />
+    );
+  }
+  //delete ^^^^^ -----------------------------------------------------------------------------------------------
+
   getWaitingRoomScreen() {
     return <JoinRoom
       roomCode={this.state.currentRoomCode}
@@ -94,6 +123,8 @@ export default class App extends React.Component {
   }
 
   render() {
+
+    return this.getGameRoom();
 
     if (this.state.isOnMainMenu) {
       return this.getMainMenu();
