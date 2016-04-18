@@ -100,13 +100,10 @@ export default class YourInfo extends React.Component {
     }
     return (
       <div>
-        <h3> Secret information </h3>
-        <div>
-          { message }
-          <ul>
-            {playerNames}
-          </ul>
-        </div>
+        { message }
+        <ul>
+          {playerNames}
+        </ul>
       </div>
     );
   }
