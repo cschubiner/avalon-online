@@ -32,7 +32,7 @@ export default class WaitingRoom extends React.Component {
   addCurrentPlayerToFirebase() {
     const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${this.props.playerName}`);
     ref.set({
-      name: this.props.playerName,
+      playerName: this.props.playerName,
     });
   }
 
@@ -42,7 +42,22 @@ export default class WaitingRoom extends React.Component {
   }
 
   startGameClicked() {
+    const gameRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}`);
+    gameRef.update({
+      hasStarted: true,
+    });
 
+    const roleNames = _.shuffle(globals.roleListForPlayerCount(this.state.players.length));
+
+    let i = 0;
+    this.state.players.forEach((player) => {
+      const playerRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/players/${player.playerName}`);
+      playerRef.update({
+        role: roleNames[i],
+      });
+
+      i+=1;
+    });
   }
 
   getPlayerRow(playerData) {
@@ -56,8 +71,8 @@ export default class WaitingRoom extends React.Component {
 
   getPlayerList() {
     let players = [];
-    this.state.players.forEach((playerData) => {
-      players.push(this.getPlayerRow(playerData));
+    this.state.players.forEach((player) => {
+      players.push(this.getPlayerRow(player));
     });
 
     return <ul>

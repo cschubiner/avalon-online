@@ -15,18 +15,7 @@ export default class RoleList extends React.Component {
   }
 
   render() {
-    let roleNames = ['Merlin', 'Morgana', 'Percival', 'Assassin', 'Villager'];
-    if (this.props.playerCount >= 6) {
-      roleNames.push('Villager');
-    }
-    if (this.props.playerCount >= 7) {
-      roleNames.push('Minion');
-    }
-    if (this.props.playerCount >= 8) {
-      roleNames.push('Villager');
-    }
-
-    roleNames = roleNames.sort((t1, t2) => {
+    const roleNames = globals.roleListForPlayerCount(this.props.playerCount).sort((t1, t2) => {
       if (globals.roleIsEvil(t1) === globals.roleIsEvil(t2)) {
         return t1 > t2;
       }
