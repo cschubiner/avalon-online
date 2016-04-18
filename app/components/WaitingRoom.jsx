@@ -47,7 +47,7 @@ export default class WaitingRoom extends React.Component {
   getPlayerRow(playerData) {
     const isCurrPlayer = playerData.name == this.props.playerName;
     return (
-      <li className={isCurrPlayer ? "currentPlayerRow" : ""}>
+      <li className={isCurrPlayer ? "bold" : ""}>
         { playerData.name }
       </li>
     );
