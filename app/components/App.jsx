@@ -3,12 +3,11 @@ import JoinRoom from './JoinRoom.jsx';
 import Firebase from 'firebase';
 import _ from 'lodash';
 
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameState: "MAIN_MENU",
+      isOnMainMenu: true,
       rooms: [],
       currentRoomCode: null,
     }
@@ -30,25 +29,25 @@ export default class App extends React.Component {
   }
 
   getNewRoomCode() {
-    return _.sample(
-      ['jizz', 'bang', 'joks', 'cary', 'a', 'b', 'c', 'd', 'e', 'f']
-    );
+    return this.randomString(4);
   }
 
-  newGameClicked() {
-    this.setState({ gameState: "IN_GAME" })
-    const roomCode = this.getNewRoomCode();
-    const fbGame = new Firebase(`https://avalonline.firebaseio.com/games/${roomCode}`);
-    const roomCodeObj = {
-      'roomCode': roomCode,
-    };
-
-    fbGame.set(roomCodeObj);
-    this.setState(roomCodeObj);
+  randomString(length) {
+    var mask = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var result = '';
+    for (var i = length; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
+    return result;
   }
 
-  joinGameClicked(roomCode) {
-    this.setState({ gameState: "IN_GAME", currentRoomCode: roomCode })
+  gameClicked(roomCode) {
+    this.setState({ isOnMainMenu: false })
+
+    // null roomCode means New Game was clicked and we need to create a new room
+    if (roomCode == null) {
+      roomCode = this.getNewRoomCode();
+    }
+
+    this.setState({ currentRoomCode: roomCode })
 
     const fbGame = new Firebase(`https://avalonline.firebaseio.com/games/${roomCode}`);
     const roomCodeObj = {
@@ -62,11 +61,12 @@ export default class App extends React.Component {
   getMainMenu() {
     return (
       <div>
-        <button type="button" onClick={this.newGameClicked.bind(this)}>
+        <button type="button" onClick={this.gameClicked.bind(this, null)}>
           New Game
         </button>
         <br/>
         <br/>
+        <p> Or join an existing game: </p>
         { this.getRoomList() }
       </div>
     );
@@ -77,7 +77,7 @@ export default class App extends React.Component {
     this.state.rooms.forEach( (roomData) => {
       rooms.push(
         <div>
-          <button type="button" onClick={this.joinGameClicked.bind(this, roomData.roomCode )}>
+          <button type="button" onClick={this.gameClicked.bind(this, roomData.roomCode )}>
             { roomData.roomCode }
           </button>
         </div>
@@ -87,43 +87,20 @@ export default class App extends React.Component {
     return rooms;
   }
 
-  getJoinMenu() {
-    return (
-      <div>
-        { this.getRoomList() }
-      </div>
-    );
-  }
-
   getWaitingRoomScreen() {
     return <JoinRoom
-      roomCode={this.state.roomCode}
+      roomCode={this.state.currentRoomCode}
       // roomCode={this.state.roomCode}
-      playerName='Clay'
     />;
   }
 
   render() {
 
-    if (this.state.gameState == "MAIN_MENU") {
+    if (this.state.isOnMainMenu) {
       return this.getMainMenu();
-    } else if (this.state.gameState == "JOIN_MENU") {
-      return this.getJoinMenu();
     } else { // IN_GAME
       return this.getWaitingRoomScreen();
     }
 
-    // return (
-    //   <div>
-    //     // { this.state.gameState == "MAIN_MENU" ? this.getMainMenu() : this.getJoinMenu() }
-    //     if (this.state.gameState == "MAIN_MENU") {
-    //       this.getMainMenu()
-    //     } else if (this.state.gameState == "JOIN_MENU") {
-    //       this.getJoinMenu()
-    //     } else { // IN_GAME
-    //       this.getGameScreen()
-    //     }
-    //   </div>
-    // );
   }
 }

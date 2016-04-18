@@ -5,7 +5,6 @@ import _ from 'lodash';
 
 const propTypes = {
   roomCode: PropTypes.string.isRequired,
-  playerName: PropTypes.string.isRequired,
 };
 
 export default class JoinRoom extends React.Component {
@@ -13,21 +12,21 @@ export default class JoinRoom extends React.Component {
     super();
     this.state = {
       isOnJoinRoom: true,
+      playerName: '',
     }
   }
 
-  joinAsPlayerClicked() {
-    this.setState({ isOnJoinRoom: false, isSpectator: false })
-  }
-
-  joinAsSpectatorClicked() {
-    this.setState({ isOnJoinRoom: false, isSpectator: true })
+  handleSubmit(isSpectator, e) {
+    e.preventDefault();
+    if (this.state.playerName.length <= 2 || this.state.playerName.length >= 21) {
+      alert("Your name must be between 3 and 20 characters.");
+    } else {
+      this.setState({ isOnJoinRoom: false, isSpectator: isSpectator })
+    }
   }
 
   handleNameChange(e) {
-    console.log(e.target.value)
-    this.setState({ name: e.target.value.toUpperCase() })
-    console.log(this.state.name)
+    this.setState({ playerName: e.target.value.toUpperCase() })
   }
 
   getJoinRoom() {
@@ -36,20 +35,22 @@ export default class JoinRoom extends React.Component {
         <h3>Joining Room</h3>
         <h1>{this.props.roomCode}</h1>
         <p> Go to avalonline.com and enter the room code <span className="bold">{this.props.roomCode}</span> to join! </p>
-
-        <form className="nameForm" onSubmit={this.handleSubmit}>
+        <p> Choose a name: </p>
+        <form className="nameForm" onSubmit={this.handleSubmit.bind(this, false)}>
           <input
             type="text"
             placeholder="WHALE FLOCK"
-            value={this.state.name}
+            value={this.state.playerName}
             onChange={this.handleNameChange.bind(this)}
           />
         </form>
 
-        <button type="button" onClick={this.joinAsPlayerClicked.bind(this)}>
+        <br/>
+
+        <button type="button" onClick={this.handleSubmit.bind(this, false)}>
           Join as Player
         </button>
-        <button type="button" onClick={this.joinAsSpectatorClicked.bind(this)}>
+        <button type="button" onClick={this.handleSubmit.bind(this, true)}>
           Join as Spectator
         </button>
       </div>
@@ -59,9 +60,8 @@ export default class JoinRoom extends React.Component {
   getWaitingRoom() {
     return <WaitingRoom
       roomCode={this.props.roomCode}
-      // roomCode={this.state.roomCode}
       isSpectator={this.state.isSpectator}
-      playerName={this.state.name}
+      playerName={this.state.playerName}
     />;
   }
 
