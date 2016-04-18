@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Firebase from 'firebase';
+import RoleList from './RoleList.jsx';
 import _ from 'lodash';
 
 const propTypes = {
@@ -72,6 +73,9 @@ export default class WaitingRoom extends React.Component {
         <div>
           { this.getPlayerList() }
         </div>
+        <RoleList
+          players={this.state.players}
+        />
         <button type="button" onClick={this.startGameClicked.bind(this)}>
           Start Game
         </button>
