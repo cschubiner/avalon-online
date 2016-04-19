@@ -3,6 +3,7 @@ import JoinRoom from './JoinRoom.jsx';
 import Firebase from 'firebase';
 import GameRoom from './GameRoom.jsx'; //delete!
 import _ from 'lodash';
+import queryString from 'query-string';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,6 +14,10 @@ export default class App extends React.Component {
       currentRoomCode: null,
       players: [], //delete
     }
+  }
+
+  getURLParams() {
+    return queryString.parse(location.search);
   }
 
   componentDidMount() {
@@ -28,7 +33,9 @@ export default class App extends React.Component {
       this.setState({'rooms': rooms});
     });
 
-    this.populatePlayerState(); //delete!
+    if (this.getURLParams().debug) {
+      this.populatePlayerState(); //delete!
+    }
   }
 
   getNewRoomCode() {
@@ -90,7 +97,7 @@ export default class App extends React.Component {
     return rooms;
   }
 
-  //delete vvvvvv -----------------------------------------------------------------------------------------------
+  //if debug==true vvvvvv -----------------------------------------------------------------------------------------------
   populatePlayerState() {
     const ref = new Firebase(`https://avalonline.firebaseio.com/games/cary/players`);
     ref.on("value", (snapshot) => {
@@ -107,14 +114,14 @@ export default class App extends React.Component {
     if (this.state.players.length < 3) return null;
     return (
       <GameRoom
-        roomCode='cary'
-        isSpectator={false}
-        playerName='CLAY'
+        roomCode={this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary'}
+        isSpectator={this.getURLParams().isSpectator ? true : false}
+        playerName={this.getURLParams().playerName}
         players={this.state.players}
       />
     );
   }
-  //delete ^^^^^ -----------------------------------------------------------------------------------------------
+  //end if debug==true ^^^^^ -----------------------------------------------------------------------------------------------
 
   getWaitingRoomScreen() {
     return <JoinRoom
@@ -123,8 +130,9 @@ export default class App extends React.Component {
   }
 
   render() {
-
-    return this.getGameRoom();
+    if (this.getURLParams().debug) {
+      return this.getGameRoom();
+    }
 
     if (this.state.isOnMainMenu) {
       return this.getMainMenu();
