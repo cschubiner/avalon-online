@@ -21,7 +21,9 @@ export default class GameRoom extends React.Component {
         currentQuestNum: 0,
         questLeader: null,
         proposedPlayers: [],
-        questResults: ["N/A", "N/A", "N/A", "N/A", "N/A"]
+        questResults: ["N/A", "N/A", "N/A", "N/A", "N/A"],
+        isProposalVoting: false,
+        isQuestVoting: false,
       },
     }
   }
@@ -51,6 +53,12 @@ export default class GameRoom extends React.Component {
       }
       if (!gameState || !gameState.questResults) {
         gameStateRef.update({questResults: ["N/A", "N/A", "N/A", "N/A", "N/A"]});
+      }
+      if (!gameState || !gameState.isProposalVoting) {
+        gameStateRef.update({isProposalVoting: false});
+      }
+      if (!gameState || !gameState.isQuestVoting) {
+        gameStateRef.update({isQuestVoting: false});
       }
     });
   }
@@ -175,12 +183,49 @@ export default class GameRoom extends React.Component {
     return (
       <form>
         { players }
-        <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} />
+        <input type="submit" value="Propose Quest" onClick={this.handleProposeClicked.bind(this)} />
       </form>
     );
 
   }
 // {(this.isMeQuestLeader() ? <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} /> : <span/>)}
+
+  handleProposeClicked(e) {
+    e.preventDefault();
+    this.advanceQuestLeader();
+
+    this.updateCurrentState({ isProposalVoting: true })
+  }
+
+  handleProposalVote(votedYes, e) {
+    e.preventDefault();
+
+    this.updateCurrentState({ isProposalVoting: false })
+
+    if (this.state.playerName.length <= 2 || this.state.playerName.length >= 21) {
+      alert("Your name must be between 3 and 20 characters.");
+    } else {
+      this.setState({ playerName: this.state.playerName.trim(), isOnJoinRoom: false, isSpectator: isSpectator })
+    }
+  }
+
+  getVoteDiv() {
+    console.log(this.state.gameState.isProposalVoting);
+    if (!this.state.gameState.isProposalVoting) {
+      return <div/>
+    } else {
+      return (
+        <div>
+          <button type="button" onClick={this.handleProposalVote.bind(this, true)}>
+            Approve
+          </button>
+          <button type="button" onClick={this.handleProposalVote.bind(this, false)}>
+            Reject
+          </button>
+        </div>
+      );
+    }
+  }
 
   render() {
     return (
@@ -190,6 +235,7 @@ export default class GameRoom extends React.Component {
         <h3>Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         <br/>
+        { this.getVoteDiv() }
         <br/>
         <br/>
         <br/>
