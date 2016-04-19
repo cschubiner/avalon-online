@@ -183,12 +183,11 @@ export default class GameRoom extends React.Component {
     return (
       <form>
         { players }
-        <input type="submit" value="Propose Quest" onClick={this.handleProposeClicked.bind(this)} />
+        {(this.isMeQuestLeader() ? <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} /> : <span/>)}
       </form>
     );
 
   }
-// {(this.isMeQuestLeader() ? <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} /> : <span/>)}
 
   handleProposeClicked(e) {
     e.preventDefault();
@@ -209,7 +208,7 @@ export default class GameRoom extends React.Component {
     }
   }
 
-  getVoteDiv() {
+  getProposalVoteDiv() {
     console.log(this.state.gameState.isProposalVoting);
     if (!this.state.gameState.isProposalVoting) {
       return <div/>
@@ -235,7 +234,7 @@ export default class GameRoom extends React.Component {
         <h3>Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         <br/>
-        { this.getVoteDiv() }
+        { this.getProposalVoteDiv() }
         <br/>
         <br/>
         <br/>
