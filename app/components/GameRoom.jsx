@@ -129,51 +129,51 @@ export default class GameRoom extends React.Component {
 
   // true if you are the quest leader, false otherwise
   isMeQuestLeader() {
-    return this.getCurrentPlayer().playerName == this.state.gameState.questLeader
+    return this.getCurrentPlayer().playerName == this.state.gameState.questLeader;
   }
 
-  selectedPlayer(e) {
+  playerIsAProposedPlayer(playerName) {
+      return globals.fbArr(this.state.gameState.proposedPlayers).includes(playerName);
+  }
+
+  selectedPlayer(selectedPlayerName, e) {
     // if the current player is not the quest leader, they can't check anything
     if (!this.isMeQuestLeader()) {
       e.preventDefault;
-    } else {
-
-      if (e.target.checked) {
-        if (globals.fbArrLen(this.state.gameState.proposedPlayers) < globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
-
-          let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
-
-          tempPlayers.push(e.target.value)
-          this.updateCurrentState({ proposedPlayers: tempPlayers })
-        }
-      } else {
+      return;
+    }
+    console.log(selectedPlayerName);
+    if (!this.playerIsAProposedPlayer(selectedPlayerName)) {
+      if (globals.fbArrLen(this.state.gameState.proposedPlayers) < globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
 
         let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
 
-        const ind = tempPlayers.indexOf(e.target.value);
-
-        tempPlayers.splice(ind, 1);
-
+        tempPlayers.push(selectedPlayerName)
         this.updateCurrentState({ proposedPlayers: tempPlayers })
       }
+    } else {
 
+      let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
+
+      const ind = tempPlayers.indexOf(selectedPlayerName);
+
+      tempPlayers.splice(ind, 1);
+
+      this.updateCurrentState({ proposedPlayers: tempPlayers })
     }
-
   }
 
   getPlayerList() {
-
     let players = [];
 
     this.sortedPlayers().forEach( player => {
-      const isLeader = player.playerName === this.state.gameState.questLeader
-      const isAProposedPlayer = globals.fbArr(this.state.gameState.proposedPlayers).includes(player.playerName)
+      const isLeader = player.playerName === this.state.gameState.questLeader;
 
       players.push(
-        <div>
-          <input type="checkbox" name="??" value={ player.playerName } onClick={this.selectedPlayer.bind(this)}
-          checked={isAProposedPlayer ? true : false} />
-            <span className={ isLeader ? "bold" : ""}>{ player.playerName }</span>
+        <div className="checkbox-div">
+          <input type="checkbox" name="??" value={ player.playerName } onClick={this.selectedPlayer.bind(this, player.playerName)}
+            checked={this.playerIsAProposedPlayer(player.playerName) ? true : false} className='checkbox'/>
+          <span className={"checkboxtext" + (isLeader ? " bold" : "")} onClick={this.selectedPlayer.bind(this, player.playerName)}>{ player.playerName }</span>
           <br/>
         </div>
       );
@@ -209,7 +209,7 @@ export default class GameRoom extends React.Component {
   }
 
   getProposalVoteDiv() {
-    console.log(this.state.gameState.isProposalVoting);
+    // console.log(this.state.gameState.isProposalVoting);
     if (!this.state.gameState.isProposalVoting) {
       return <div/>
     } else {
