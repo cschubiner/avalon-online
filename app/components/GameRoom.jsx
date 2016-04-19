@@ -16,9 +16,17 @@ export default class GameRoom extends React.Component {
   constructor() {
     super();
     this.state = {
+      gameState: {
+        numProposals: 0,
+        currentQuestNum: 0,
+        questLeader: null,
+        proposedPlayers: [],
+        questResults: ["N/A", "N/A", "N/A", "N/A", "N/A"]
+      },
     }
   }
 
+  // this is the controlling player. it is the player that corresponds to this browser
   getCurrentPlayer() {
     return this.props.players.find(p =>
       p.playerName === this.props.playerName
@@ -28,12 +36,21 @@ export default class GameRoom extends React.Component {
   setInitialGameState() {
     const gameStateRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/gameState`);
     gameStateRef.once("value", (snapshot) => {
-      const gameState = snapshot.val();;
+      const gameState = snapshot.val();
       if (!gameState || !gameState.questLeader) {
         gameStateRef.update({questLeader: _.sample(this.props.players).playerName});
       }
       if (!gameState || !gameState.numProposals) {
         gameStateRef.update({numProposals: 0});
+      }
+      if (!gameState || !gameState.currentQuestNum) {
+        gameStateRef.update({currentQuestNum: 0});
+      }
+      if (!gameState || !gameState.proposedPlayers) {
+        gameStateRef.update({proposedPlayers: []});
+      }
+      if (!gameState || !gameState.questResults) {
+        gameStateRef.update({questResults: ["N/A", "N/A", "N/A", "N/A", "N/A"]});
       }
     });
   }
@@ -47,12 +64,45 @@ export default class GameRoom extends React.Component {
     this.setInitialGameState();
   }
 
+  advanceQuestLeader(e) {
+    if (e != null) {
+      e.preventDefault();
+    }
+    let newLeader = null;
+    let i = 0;
+    this.sortedPlayers().forEach( player => {
+      if (player.playerName === this.state.gameState.questLeader) {
+        if (i == this.sortedPlayers().length - 1) {
+          newLeader = this.sortedPlayers()[0];
+        } else {
+          newLeader = this.sortedPlayers()[i + 1];
+        }
+      }
+      i += 1;
+    });
+    this.updateCurrentState({ questLeader: newLeader.playerName })
+  }
+
+  updateCurrentState(updatedState) {
+    const gameStateRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/gameState`);
+    gameStateRef.update(updatedState);
+  }
+
   // the game state that is always displayed
-  getPermanentGameState() {
+  getPermanentGameStateDiv() {
     if (!this.state.gameState) return null;
 
     return (
       <div>
+        <div>
+          currentQuestNum: {this.state.gameState.currentQuestNum + 1}
+        </div>
+        <div>
+          numPlayersOnQuests: {globals.numPlayersOnQuests.join(", ")}
+        </div>
+        <div>
+          questResults: {this.state.gameState.questResults.join(", ")}
+        </div>
         <div>
           numProposals: {this.state.gameState.numProposals}
         </div>
@@ -63,14 +113,82 @@ export default class GameRoom extends React.Component {
     );
   }
 
+  sortedPlayers() {
+    return this.props.players.sort( (p1, p2) => {
+      return p1.playerName.localeCompare(p2.playerName);
+    });
+  }
+
+  // true if you are the quest leader, false otherwise
+  isMeQuestLeader() {
+    return this.getCurrentPlayer().playerName == this.state.gameState.questLeader
+  }
+
+  selectedPlayer(e) {
+    // if the current player is not the quest leader, they can't check anything
+    if (!this.isMeQuestLeader()) {
+      e.preventDefault;
+    } else {
+
+      if (e.target.checked) {
+        if (globals.fbArrLen(this.state.gameState.proposedPlayers) < globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+
+          let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
+
+          tempPlayers.push(e.target.value)
+          this.updateCurrentState({ proposedPlayers: tempPlayers })
+        }
+      } else {
+
+        let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
+
+        const ind = tempPlayers.indexOf(e.target.value);
+
+        tempPlayers.splice(ind, 1);
+
+        this.updateCurrentState({ proposedPlayers: tempPlayers })
+      }
+
+    }
+
+  }
+
+  getPlayerList() {
+
+    let players = [];
+
+    this.sortedPlayers().forEach( player => {
+      const isLeader = player.playerName === this.state.gameState.questLeader
+      const isAProposedPlayer = globals.fbArr(this.state.gameState.proposedPlayers).includes(player.playerName)
+
+      players.push(
+        <div>
+          <input type="checkbox" name="??" value={ player.playerName } onClick={this.selectedPlayer.bind(this)}
+          checked={isAProposedPlayer ? true : false} />
+            <span className={ isLeader ? "bold" : ""}>{ player.playerName }</span>
+          <br/>
+        </div>
+      );
+
+    });
+
+    return (
+      <form>
+        { players }
+        <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} />
+      </form>
+    );
+
+  }
+// {(this.isMeQuestLeader() ? <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} /> : <span/>)}
+
   render() {
     return (
       <div>
-        <h1>Game Room</h1>
-        { this.getPermanentGameState() }
-        <br/>
-        <br/>
-        <br/>
+        <h1>Hand Room: {this.props.roomCode}</h1>
+        { this.getPermanentGameStateDiv() }
+        <h3>Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
+        { this.getPlayerList() }
         <br/>
         <br/>
         <br/>

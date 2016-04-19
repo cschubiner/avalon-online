@@ -1,11 +1,21 @@
 var globals = {};
 
+globals.numPlayersOnQuests = [2, 3, 4, 3, 3];
+
 globals.roleIsEvil = (role) => {
   return ['MORGANA', 'ASSASSIN', 'MINION'].includes(role.toUpperCase());
 };
 
 globals.roleIsGood = (role) => {
   return !globals.roleIsEvil(role);
+};
+
+globals.fbArrLen = (arr) => {
+  return arr ? arr.length : 0;
+};
+
+globals.fbArr = (arr) => {
+  return arr ? arr : [];
 };
 
 globals.roleNamesForPlayerCount = (playerCount) => {
