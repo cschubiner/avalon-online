@@ -42,3 +42,20 @@ input[type=checkbox] {
 .checkbox-div {
   padding: 5px 0px;
 }
+
+.spectator {
+  background-color: black;
+  color: white;
+}
+
+.inner-div {
+  padding: 10px;
+}
+
+.outer-div {
+  position: absolute; top: 0; left: 0; height: 100%; width: 100%;
+}
+
+body {
+  margin:0;
+}

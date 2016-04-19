@@ -183,6 +183,7 @@ export default class GameRoom extends React.Component {
     return (
       <form>
         { players }
+        <br/>
         {(this.isMeQuestLeader() ? <input type="submit" value="Propose Quest" onClick={this.advanceQuestLeader.bind(this)} /> : <span/>)}
       </form>
     );
@@ -228,12 +229,12 @@ export default class GameRoom extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={"outer-div " + (this.props.isSpectator ? 'spectator' : '')}>
+      <div className="inner-div">
         <h1>Hand Room: {this.props.roomCode}</h1>
         { this.getPermanentGameStateDiv() }
         <h3>Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
-        <br/>
         { this.getProposalVoteDiv() }
         <br/>
         <br/>
@@ -251,6 +252,7 @@ export default class GameRoom extends React.Component {
         <RoleList
           playerCount={this.props.players.length}
         />
+      </div>
       </div>
     );
   }

@@ -138,6 +138,5 @@ export default class App extends React.Component {
     } else { // IN_GAME
       return this.getWaitingRoomScreen();
     }
-
   }
 }
