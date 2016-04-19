@@ -21,7 +21,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-
     const ref = new Firebase(`https://avalonline.firebaseio.com/games`);
     ref.on("value", (snapshot) => {
       let rooms = [];
@@ -34,7 +33,7 @@ export default class App extends React.Component {
     });
 
     if (this.getURLParams().debug) {
-      this.populatePlayerState(); //delete!
+      this.populatePlayerState();
     }
   }
 
