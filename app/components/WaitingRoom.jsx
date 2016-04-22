@@ -131,7 +131,9 @@ export default class WaitingRoom extends React.Component {
         roomCode={this.props.roomCode}
         isSpectator={this.props.isSpectator}
         playerName={this.props.playerName}
-        players={this.state.players}
+        players={this.state.players.filter( p => {
+          return !p.isSpectator;
+        })}
       />
     );
   }
