@@ -2,6 +2,7 @@ import React from 'react';
 import JoinRoom from './JoinRoom.jsx';
 import Firebase from 'firebase';
 import GameRoom from './GameRoom.jsx'; //delete!
+import SpectatorRoom from './SpectatorRoom.jsx'; //delete!
 import _ from 'lodash';
 import queryString from 'query-string';
 
@@ -120,6 +121,14 @@ export default class App extends React.Component {
       />
     );
   }
+  getSpectatorRoom() {
+    return (
+      <SpectatorRoom
+        roomCode={this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary'}
+        players={this.state.players}
+      />
+    );
+  }
   //end if debug==true ^^^^^ -----------------------------------------------------------------------------------------------
 
   getWaitingRoomScreen() {
@@ -130,6 +139,9 @@ export default class App extends React.Component {
 
   render() {
     if (this.getURLParams().debug) {
+      if (this.getURLParams().isSpectator) {
+        return this.getSpectatorRoom();
+      }
       return this.getGameRoom();
     }
 

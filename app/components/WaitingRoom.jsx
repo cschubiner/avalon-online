@@ -48,7 +48,9 @@ export default class WaitingRoom extends React.Component {
   }
 
   componentDidMount() {
-    this.addCurrentPlayerToFirebase();
+    if (!this.props.isSpectator) {
+      this.addCurrentPlayerToFirebase();
+    }
     this.populatePlayerState();
 
     // listen to hasStarted
@@ -131,9 +133,16 @@ export default class WaitingRoom extends React.Component {
         roomCode={this.props.roomCode}
         isSpectator={this.props.isSpectator}
         playerName={this.props.playerName}
-        players={this.state.players.filter( p => {
-          return !p.isSpectator;
-        })}
+        players={this.state.players}
+      />
+    );
+  }
+
+  getSpectatorRoom() {
+    return (
+      <SpectatorRoom
+        roomCode={this.props.roomCode}
+        players={this.state.players}
       />
     );
   }
@@ -142,6 +151,11 @@ export default class WaitingRoom extends React.Component {
     if (!this.state.hasStarted) {
       return this.getWaitingRoom();
     }
+
+    if (this.props.isSpectator) {
+      return this.getSpectatorRoom();
+    }
+
     const currentPlayerExists = this.state.players.find(p => {
       return p.playerName === this.props.playerName
     });

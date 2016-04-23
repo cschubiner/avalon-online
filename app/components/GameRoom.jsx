@@ -8,7 +8,6 @@ import YourInfo from './YourInfo.jsx';
 const propTypes = {
   roomCode: PropTypes.string.isRequired,
   playerName: PropTypes.string.isRequired,
-  isSpectator: PropTypes.bool.isRequired,
   players: PropTypes.array.isRequired,
 };
 
@@ -421,7 +420,7 @@ export default class GameRoom extends React.Component {
 
   render() {
     return (
-      <div className={"outer-div " + (this.props.isSpectator ? 'spectator' : '')}>
+      <div className={"outer-div"}>
       <div className="inner-div">
         <button type="button" onClick={this.restartHand.bind(this)}>
           RestartHand
