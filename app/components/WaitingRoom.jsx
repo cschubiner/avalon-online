@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Firebase from 'firebase';
 import RoleList from './RoleList.jsx';
 import GameRoom from './GameRoom.jsx';
+import SpectatorRoom from './SpectatorRoom.jsx';
 import globals from '../globals.js'
 import _ from 'lodash';
 

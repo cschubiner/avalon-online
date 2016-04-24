@@ -25,20 +25,22 @@ export default class RoleList extends React.Component {
       return 1;
     });
 
-    const roles = roleNames.map((role) => {
-      return (
-        <li className={globals.roleIsEvil(role) ? 'evil' : 'good'}>
-          { role }
-        </li>
+    let i = 0;
+    const roles = [];
+    roleNames.forEach((role) => {
+      const isLast = i == roleNames.length - 1;
+      i += 1;
+      roles.push(
+        <span className={globals.roleIsEvil(role) ? 'evil' : 'good'}>
+          { role }{ !isLast ? ', ' : ''}
+        </span>
       );
     });
 
     return (
       <div>
         <h3> Roles </h3>
-        <ul>
-          { roles }
-        </ul>
+        { roles }
       </div>
     );
   }

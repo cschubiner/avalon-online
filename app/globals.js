@@ -2,6 +2,14 @@ var globals = {};
 
 globals.numPlayersOnQuests = [2, 3, 4, 3, 3];
 
+// 0 indexed
+globals.numFailsToFail = (questNum, numPlayers) => {
+  if (questNum === 3 && numPlayers >= 7)
+    return 2;
+
+  return 1;
+};
+
 globals.roleIsEvil = (role) => {
   return ['MORGANA', 'ASSASSIN', 'MINION'].includes(role.toUpperCase());
 };

@@ -347,7 +347,7 @@ export default class GameRoom extends React.Component {
 
           let tempResults = this.state.gameState.questResults;
           const currentQuestNum = this.state.gameState.currentQuestNum
-          if (fails > 0) {
+          if (fails >= globals.numFailsToFail(currentQuestNum, this.props.players.length)) {
             tempResults[currentQuestNum] = "Fail";
           } else {
             tempResults[currentQuestNum] = "Pass";

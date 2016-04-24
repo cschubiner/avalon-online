@@ -11,7 +11,7 @@
 }
 
 .good {
-  color: blue;
+  color: lightblue;
 }
 
 .black {
@@ -45,7 +45,19 @@ input[type=checkbox] {
 
 .spectator {
   background-color: black;
+  background-image: url("https://i.ytimg.com/vi/aiAmAcaDQrM/maxresdefault.jpg");
+  background-image: url("http://www.nicholasbuer.com/wp-content/uploads/2015/05/Fuencaliente-Pano.jpg");
+  background-image: url("http://wallpoper.com/images/00/41/57/12/stones-excalibur_00415712.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
   color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.inner-spectator{
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .inner-div {
@@ -58,4 +70,46 @@ input[type=checkbox] {
 
 body {
   margin:0;
+}
+
+.failedQuest {
+  color: red !important;
+}
+
+.succeededQuest {
+  color: lightgreen !important;
+}
+
+.failed-proposals{
+  margin-top: 5px;
+  color: gray;
+  font-style: italic;
+}
+
+.flex-center-horiz {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.numberCircle {
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+
+    color: rgba(255, 255, 255, 0.81);
+
+    background: rgba(0, 0, 0, 0.25);
+    border: 2px solid;
+    text-align: center;
+
+    font: 32px Arial, sans-serif;
 }

@@ -40,23 +40,34 @@ export default class GameRoom extends React.Component {
     });
   }
 
+  getQuestCircles() {
+    // this.state.gameState.questResults
+    const circles = [];
+    let i = 0;
+    globals.numPlayersOnQuests.forEach( numPlayers => {
+      const questFailed = this.state.gameState.questResults[i] === 'Fail';
+      const questSucceeded = this.state.gameState.questResults[i] === 'Pass';
+      const twoFailsNeeded = globals.numFailsToFail(i, this.props.players.length) == 2;
+      circles.push(
+        <div className={`numberCircle ${questFailed ? 'failedQuest' : (questSucceeded ? 'succeededQuest' :'')}`}>
+          {numPlayers}{ twoFailsNeeded ? '*' : ''}
+        </div>
+      );
+
+      i+=1;
+    });
+    return circles;
+  }
+
   // the game state that is always displayed
   getPermanentGameStateDiv() {
     if (!this.state.gameState) return null;
 
     return (
       <div>
-        <div>
-          Current Quest: {this.state.gameState.currentQuestNum + 1}
-        </div>
-        <div>
-          # Players on Quests: {globals.numPlayersOnQuests.join(", ")}
-        </div>
-        <div>
-          Quest Results: {this.state.gameState.questResults.join(", ")}
-        </div>
-        <div>
-          # Failed Proposals: {this.state.gameState.numProposals}/5
+        { this.getQuestCircles() }
+        <div className='failed-proposals flex-center-horiz'>
+          <span>Number Failed Proposals: {this.state.gameState.numProposals}/5</span>
         </div>
       </div>
     );
@@ -79,20 +90,20 @@ export default class GameRoom extends React.Component {
       const isLeader = player.playerName === this.state.gameState.questLeader;
 
       let postStr = ""
-      if (this.state.gameState.lastProposalVotes) {
-        postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
-      }
+      // if (this.state.gameState.lastProposalVotes) {
+      //   postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
+      // }
 
-      players.push(
-        <div className="checkbox-div">
-          <input type="checkbox" name="??" value={ player.playerName }
-            checked={this.playerIsAProposedPlayer(player.playerName) ? true : false} className='checkbox'/>
-          <span className={"checkboxtext" + (isLeader ? " bold" : "")} >
-            { player.playerName + postStr }
-          </span>
-          <br/>
-        </div>
-      );
+      if (this.playerIsAProposedPlayer(player.playerName)) {
+        players.push(
+          <div className="checkbox-div">
+            <span className={"checkboxtext" + (isLeader ? " bold" : "")} >
+              { player.playerName + postStr }
+            </span>
+            <br/>
+          </div>
+        );
+      }
 
     });
 
@@ -215,10 +226,13 @@ export default class GameRoom extends React.Component {
   render() {
     return (
       <div className={"outer-div spectator"}>
-      <div className="inner-div">
-        <h1>Hand Room: {this.props.roomCode}</h1>
+      <div className="inner-div inner-spectator">
+        <div className="flex-center-horiz">
+          <h1>Avalonline</h1>
+          <span className='roomCode'>{this.props.roomCode}</span>
+        </div>
         { this.getPermanentGameStateDiv() }
-        <h3>Proposed Questees by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
+        <h3>{this.state.gameState.questLeader}'s Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         { this.getProposalVoteDiv() }
         <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
