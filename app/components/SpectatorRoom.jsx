@@ -44,7 +44,7 @@ export default class GameRoom extends React.Component {
     // this.state.gameState.questResults
     const circles = [];
     let i = 0;
-    globals.numPlayersOnQuests.forEach( numPlayers => {
+    globals.numPlayersOnQuests(this.props.players.length).forEach( numPlayers => {
       const questFailed = this.state.gameState.questResults[i] === 'Fail';
       const questSucceeded = this.state.gameState.questResults[i] === 'Pass';
       const twoFailsNeeded = globals.numFailsToFail(i, this.props.players.length) == 2;
