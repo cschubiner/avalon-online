@@ -27,6 +27,10 @@ input[type=checkbox] {
   padding: 10px;
 }
 
+.roomButtonDiv {
+  margin-bottom: 10px;
+}
+
 .checkboxtext:hover {
   cursor: pointer;
 }

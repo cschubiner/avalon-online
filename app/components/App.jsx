@@ -11,7 +11,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       isOnMainMenu: true,
-      rooms: [],
+      roomCodes: [],
       currentRoomCode: null,
       players: [], //delete
     }
@@ -21,16 +21,35 @@ export default class App extends React.Component {
     return queryString.parse(location.search);
   }
 
+  cleanupOldRooms() {
+    var ref = new Firebase('https://avalonline.firebaseio.com/games');
+    var now = Date.now();
+    var cutoff = now - 4 * 60 * 60 * 1000;
+    var old = ref.orderByChild('timestamp').startAt(cutoff).limitToLast(1);
+    var listener = old.on('child_added', function(snapshot) {
+        snapshot.ref().remove();
+    });
+  }
+
   componentDidMount() {
+    this.cleanupOldRooms();
+
     const ref = new Firebase(`https://avalonline.firebaseio.com/games`);
     ref.on("value", (snapshot) => {
       let rooms = [];
       snapshot.forEach((childSnapshot) => {
-        let key = childSnapshot.key();
-        let childData = childSnapshot.val();
-        rooms.push(childData);
+        const room = childSnapshot.val();
+        const roomCode = room.roomCode;
+        const currTimeInMs = Date.now();
+        if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
+          rooms.push(room);
+        }
       });
-      this.setState({'rooms': rooms});
+
+      const roomCodes = rooms.sort((a,b) => {
+        return b.dateCreated - a.dateCreated;
+      }).map(r => r.roomCode);
+      this.setState({'roomCodes': roomCodes});
     });
 
     if (this.getURLParams().debug) {
@@ -62,6 +81,7 @@ export default class App extends React.Component {
     const fbGame = new Firebase(`https://avalonline.firebaseio.com/games/${roomCode}`);
     const roomCodeObj = {
       'roomCode': roomCode,
+      'dateCreated': Date.now(),
     };
 
     fbGame.update(roomCodeObj);
@@ -71,6 +91,7 @@ export default class App extends React.Component {
   getMainMenu() {
     return (
       <div>
+        Create a new game:
         <button type="button" onClick={this.gameClicked.bind(this, null)}>
           New Game
         </button>
@@ -84,11 +105,11 @@ export default class App extends React.Component {
 
   getRoomList() {
     let rooms = [];
-    this.state.rooms.forEach( (roomData) => {
+    this.state.roomCodes.forEach( (roomCode) => {
       rooms.push(
-        <div>
-          <button type="button" onClick={this.gameClicked.bind(this, roomData.roomCode )}>
-            { roomData.roomCode }
+        <div className='roomButtonDiv'>
+          <button type="button" onClick={this.gameClicked.bind(this, roomCode )}>
+            { roomCode }
           </button>
         </div>
       );
