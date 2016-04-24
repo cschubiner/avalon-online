@@ -90,20 +90,18 @@ export default class GameRoom extends React.Component {
       const isLeader = player.playerName === this.state.gameState.questLeader;
 
       let postStr = ""
-      // if (this.state.gameState.lastProposalVotes) {
-      //   postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
-      // }
-
-      if (this.playerIsAProposedPlayer(player.playerName)) {
-        players.push(
-          <div className="checkbox-div">
-            <span className={"checkboxtext" + (isLeader ? " bold" : "")} >
-              { player.playerName + postStr }
-            </span>
-            <br/>
-          </div>
-        );
+      if (this.state.gameState.lastProposalVotes) {
+        postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
       }
+
+      players.push(
+        <div className="checkbox-div">
+          <span className={"checkboxtext" + (isLeader ? " bold" : "")} >
+            { player.playerName + postStr }
+          </span>
+          <br/>
+        </div>
+      );
 
     });
 
