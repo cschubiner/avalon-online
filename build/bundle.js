@@ -37130,7 +37130,7 @@
 	});
 	var globals = {};
 
-	globals.numPlayersOnQuests = [2, 3, 4, 3, 3];
+	globals.numPlayersOnQuests = [2, 3, 4, 3, 4];
 
 	// 0 indexed
 	globals.numFailsToFail = function (questNum, numPlayers) {
