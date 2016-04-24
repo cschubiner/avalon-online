@@ -125,6 +125,10 @@ export default class GameRoom extends React.Component {
     this.updateCurrentState({ questLeader: newLeader.playerName })
   }
 
+  numPlayersOnQuests() {
+    return this.numPlayersOnQuests(this.props.players.length);
+  }
+
   updateCurrentState(updatedState) {
     const gameStateRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/gameState`);
     gameStateRef.update(updatedState);
@@ -140,7 +144,7 @@ export default class GameRoom extends React.Component {
           Current Quest: {this.state.gameState.currentQuestNum + 1}
         </div>
         <div>
-          # Players on Quests: {globals.numPlayersOnQuests.join(", ")}
+          # Players on Quests: {this.numPlayersOnQuests().join(", ")}
         </div>
         <div>
           Quest Results: {this.state.gameState.questResults.join(", ")}
@@ -175,7 +179,7 @@ export default class GameRoom extends React.Component {
     }
     console.log(selectedPlayerName);
     if (!this.playerIsAProposedPlayer(selectedPlayerName)) {
-      if (globals.fbArrLen(this.state.gameState.proposedPlayers) < globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+      if (globals.fbArrLen(this.state.gameState.proposedPlayers) < this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
 
         let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
 
@@ -260,7 +264,7 @@ export default class GameRoom extends React.Component {
   handleProposeClicked(e) {
     e.preventDefault();
 
-    if (globals.fbArrLen(this.state.gameState.proposedPlayers) == globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+    if (globals.fbArrLen(this.state.gameState.proposedPlayers) == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
       // this.advanceQuestLeader();
       this.updateCurrentState({ isProposalVoting: true })
     }
@@ -325,7 +329,7 @@ export default class GameRoom extends React.Component {
         const shouldShowVoteButtons = proposedPlayers.indexOf(this.getCurrentPlayer().playerName) != -1 && questVotePlayersWhoVoted.indexOf(this.getCurrentPlayer().playerName) == -1;
 
         let questVoteResults = globals.fbArr(this.state.gameState.questVoteResults);
-        if (questVoteResults.length == globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+        if (questVoteResults.length == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
           this.updateCurrentState({ isQuestVoting: false });
 
           this.updateCurrentState({ questVoteResults: [] });
@@ -427,7 +431,7 @@ export default class GameRoom extends React.Component {
         </button>
         <h1>Hand Room: {this.props.roomCode}</h1>
         { this.getPermanentGameStateDiv() }
-        <h3>Proposed Questees by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
+        <h3>Proposed Questees by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         { this.getProposalVoteDiv() }
         <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>

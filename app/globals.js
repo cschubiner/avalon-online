@@ -1,6 +1,18 @@
 var globals = {};
 
-globals.numPlayersOnQuests = [2, 3, 4, 3, 3];
+globals.numPlayersOnQuests = (numPlayers) => {
+  if (numPlayers === 5) {
+    return [2, 3, 2, 3, 3];
+  }
+  if (numPlayers === 6) {
+    return [2, 3, 4, 3, 4];
+  }
+  if (numPlayers === 7) {
+    return [2, 3, 3, 4, 4];
+  }
+
+  return [3, 4, 4, 5, 5];
+};
 
 // 0 indexed
 globals.numFailsToFail = (questNum, numPlayers) => {
