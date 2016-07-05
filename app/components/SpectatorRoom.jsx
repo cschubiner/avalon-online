@@ -94,15 +94,23 @@ export default class GameRoom extends React.Component {
     this.sortedPlayers().forEach( player => {
       const isLeader = player.playerName === this.state.gameState.questLeader;
 
-      let postStr = ""
+      let postSpan;
       if (this.state.gameState.lastProposalVotes) {
-        postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
+        const lastVote = this.state.gameState.lastProposalVotes[player.playerName];
+        postSpan = (
+          <span>
+            {'(last vote: '}
+            <span className={lastVote === 'Approve' ? 'blue' : 'yellow'}>
+              {`${lastVote}`}
+            </span>)
+            </span>
+        );
       }
 
       players.push(
         <div className="checkbox-div">
           <span className={"checkboxtext" + (isLeader ? " bold" : "") + (this.playerIsAProposedPlayer(player.playerName) ? " green" : "")} >
-            {isLeader ? '-' : ''} { player.playerName + postStr }
+            {isLeader ? '-' : ''} { player.playerName } {postSpan}
           </span>
           <br/>
         </div>
@@ -140,12 +148,22 @@ export default class GameRoom extends React.Component {
       return globals.fbArr(this.state.gameState.proposedPlayers).includes(playerName);
   }
 
+  renderGameMessage() {
+    if (!this.state.gameState.gameMessage) return null;
+
+    const msgType = this.state.gameState.gameMessageType;
+    let messageClass = globals.MESSAGE_NEUTRAL;
+    if (msgType) {
+      messageClass = msgType;
+    }
+    return (
+      <h4 className={`gameMessage ${messageClass}`}>{this.state.gameState.gameMessage}</h4>
+    );
+  }
+
   render() {
     const recentVoteResults = (
       <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
-    );
-    const gameMessage = (
-      <h4 className='gameMessage'>{this.state.gameState.gameMessage}</h4>
     );
     return (
       <div className={"outer-div spectator"}>
@@ -155,7 +173,7 @@ export default class GameRoom extends React.Component {
           <span className='roomCode'>{this.props.roomCode}</span>
         </div>
         { this.getPermanentGameStateDiv() }
-        { this.state.gameState.gameMessage ? gameMessage : null }
+        { this.renderGameMessage() }
         <h3>{this.state.gameState.questLeader}'s Proposed Questers ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         { this.state.gameState.lastQuestVoteResults !== 'n/a' ? recentVoteResults : null }

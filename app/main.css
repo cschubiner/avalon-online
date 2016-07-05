@@ -23,6 +23,27 @@
   width: 341px;
 }
 
+.message_neutral {
+  color: white;
+}
+
+.message_good {
+  color: #76ff76;
+}
+
+.message_evil {
+  color: red;
+}
+
+
+.yellow {
+  color: #f9ff00;
+}
+
+.blue {
+  color: #00ffe9;
+}
+
 .green {
   color: #76ff76;
 }

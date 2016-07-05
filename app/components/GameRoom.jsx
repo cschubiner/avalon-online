@@ -41,6 +41,10 @@ export default class GameRoom extends React.Component {
     );
   }
 
+  amIEvil() {
+    return globals.roleIsEvil(this.getCurrentPlayer().role);
+  }
+
   setInitialGameState() {
     const gameStateRef = new Firebase(`https://avalonline.firebaseio.com/games/${this.props.roomCode}/gameState`);
     gameStateRef.once("value", (snapshot) => {
@@ -123,6 +127,7 @@ export default class GameRoom extends React.Component {
       i += 1;
     });
     this.updateCurrentState({ questLeader: newLeader.playerName })
+    return newLeader.playerName;
   }
 
   numPlayersOnQuests() {
@@ -198,8 +203,11 @@ export default class GameRoom extends React.Component {
     }
   }
 
-  setGameMessage(s) {
-    this.updateCurrentState({gameMessage: s});
+  setGameMessage(s, messageType = NEUTRAL) {
+    this.updateCurrentState({
+      gameMessage: s,
+      gameMessageType: messageType,
+    });
   }
 
   getPlayerList() {
@@ -225,12 +233,17 @@ export default class GameRoom extends React.Component {
         this.updateCurrentState({ isProposalVoting: false });
         if (passes >= fails) {
           // console.log("AAAAAAAAAAAAAAAAAAA");
-          this.setGameMessage(`Quest is approved (${ratioString})! Quest-goers, choose pass or fail!`)
+          this.setGameMessage(
+            `Quest is approved (${ratioString})! Quest-goers, choose pass or fail!`,
+            globals.MESSAGE_GOOD
+          );
           this.updateCurrentState({ isQuestVoting: true });
         } else {
+          const newLeader = this.advanceQuestLeader();
           // console.log("BBBBBBBBBBBBBBBBBBB");
-          this.setGameMessage(`Quest is rejected (${ratioString})!`)
-          this.advanceQuestLeader();
+          let tempMessage = `Quest is rejected (${ratioString})!`;
+          tempMessage += ` ${newLeader}, propose the next quest!`;
+          this.setGameMessage(tempMessage, globals.MESSAGE_EVIL);
           this.updateCurrentState({ numProposals: this.state.gameState.numProposals + 1 });
         }
 
@@ -272,7 +285,10 @@ export default class GameRoom extends React.Component {
     e.preventDefault();
 
     if (globals.fbArrLen(this.state.gameState.proposedPlayers) == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
-      // this.advanceQuestLeader();
+      this.setGameMessage(
+        `Quest is proposed! Everyone, choose 'approve' or 'fail'.`,
+        globals.MESSAGE_NEUTRAL
+      );
       this.updateCurrentState({ isProposalVoting: true })
     }
 
@@ -296,7 +312,9 @@ export default class GameRoom extends React.Component {
 
   handleQuestVote(votedPass, e) {
     e.preventDefault();
-
+    if (!votedPass && !this.amIEvil()) {
+      return;
+    }
     // this.updateCurrentState({ isProposalVoting: false })
 
     // console.log(this.state.gameState);
@@ -345,7 +363,7 @@ export default class GameRoom extends React.Component {
 
           this.updateCurrentState({ lastQuestVoteResults: _.shuffle(questVoteResults).join(", ") });
 
-          this.advanceQuestLeader();
+          const newLeader = this.advanceQuestLeader();
 
           let passes = 0;
           let fails = 0;
@@ -359,11 +377,23 @@ export default class GameRoom extends React.Component {
 
           let tempResults = this.state.gameState.questResults;
           const currentQuestNum = this.state.gameState.currentQuestNum
+          let tempMessage = '';
+          let questFailed = false;
           if (fails >= globals.numFailsToFail(currentQuestNum, this.props.players.length)) {
+            questFailed = true;
             tempResults[currentQuestNum] = "Fail";
+            tempMessage += `Quest fails with ${fails} fail${fails === 1 ? '' : 's'}!`;
           } else {
+            if (fails > 0) {
+              tempMessage += `Quest passes with ${fails} fail${fails === 1 ? '' : 's'}!`;
+            }
+            else {
+              tempMessage += `Quest passes!`;
+            }
             tempResults[currentQuestNum] = "Pass";
           }
+          tempMessage += ` ${newLeader}, propose the next quest!`;
+          this.setGameMessage(tempMessage, questFailed ? globals.MESSAGE_EVIL : globals.MESSAGE_GOOD);
           this.updateCurrentState({ numProposals: 0 });
           this.updateCurrentState({ questResults: tempResults });
           this.updateCurrentState({ currentQuestNum: currentQuestNum + 1 });

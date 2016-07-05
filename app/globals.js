@@ -1,5 +1,9 @@
 var globals = {};
 
+globals.MESSAGE_NEUTRAL = 'message_neutral';
+globals.MESSAGE_GOOD =    'message_good';
+globals.MESSAGE_EVIL =    'message_evil';
+
 globals.lastHandStore = 'avalon-online-last-hand';
 
 globals.numPlayersOnQuests = (numPlayers) => {

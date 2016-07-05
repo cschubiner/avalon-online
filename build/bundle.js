@@ -99,7 +99,7 @@
 
 
 	// module
-	exports.push([module.id, ".bold {\n  font-weight: bold;\n}\n\n.italics {\n  font-style: italic;\n}\n\n.evil {\n  color: red;\n}\n\n.good {\n  color: lightblue;\n}\n\n.black {\n  color: black;\n}\n\n.green {\n  color: #76ff76;\n}\n\ninput[type=checkbox] {\n  /* Double-sized Checkboxes */\n  -ms-transform: scale(2); /* IE */\n  -moz-transform: scale(2); /* FF */\n  -webkit-transform: scale(2); /* Safari and Chrome */\n  -o-transform: scale(2); /* Opera */\n  padding: 10px;\n}\n\n.roomButtonDiv {\n  margin-bottom: 10px;\n}\n\n.checkboxtext:hover {\n  cursor: pointer;\n}\n\n.checkboxtext\n{\n  /* Checkbox text */\n  padding-left: 10px;\n  font-size: 18px;\n  display: inline;\n}\n\n.checkbox-div {\n  padding: 5px 0px;\n}\n\n.spectator {\n  background-color: black;\n  background-image: url(\"https://i.ytimg.com/vi/aiAmAcaDQrM/maxresdefault.jpg\");\n  background-image: url(\"http://www.nicholasbuer.com/wp-content/uploads/2015/05/Fuencaliente-Pano.jpg\");\n  background-image: url(\"http://wallpoper.com/images/00/41/57/12/stones-excalibur_00415712.jpg\");\n  background-repeat: no-repeat;\n  background-size: cover;\n\n  color: white;\n  display: flex;\n  justify-content: center;\n}\n\n.inner-spectator{\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n.inner-div {\n  padding: 10px;\n}\n\n.outer-div {\n  position: absolute; top: 0; left: 0; height: 100%; width: 100%;\n}\n\nbody {\n  margin:0;\n}\n\n.failedQuest {\n  color: red !important;\n}\n\n.succeededQuest {\n  color: lightgreen !important;\n}\n\n.failed-proposals{\n  margin-top: 5px;\n  color: gray;\n  font-style: italic;\n}\n\n.flex-center-horiz {\n  display: flex;\n  justify-content: center;\n}\n\n.flex-center {\n  display: flex;\n  justify-content: center;\n}\n\n.numberCircle {\n    border-radius: 50%;\n    display: inline-block;\n    margin-right: 10px;\n\n    width: 36px;\n    height: 36px;\n    padding: 8px;\n\n    color: rgba(255, 255, 255, 0.81);\n\n    background: rgba(0, 0, 0, 0.25);\n    border: 2px solid;\n    text-align: center;\n\n    font: 32px Arial, sans-serif;\n}\n", ""]);
+	exports.push([module.id, ".bold {\n  font-weight: bold;\n}\n\n.italics {\n  font-style: italic;\n}\n\n.evil {\n  color: red;\n}\n\n.good {\n  color: lightblue;\n}\n\n.black {\n  color: black;\n}\n\n.gameMessage {\n  font-size: 25px;\n  width: 341px;\n}\n\n.message_neutral {\n  color: white;\n}\n\n.message_good {\n  color: #76ff76;\n}\n\n.message_evil {\n  color: red;\n}\n\n\n.green {\n  color: #76ff76;\n}\n\ninput[type=checkbox] {\n  /* Double-sized Checkboxes */\n  -ms-transform: scale(2); /* IE */\n  -moz-transform: scale(2); /* FF */\n  -webkit-transform: scale(2); /* Safari and Chrome */\n  -o-transform: scale(2); /* Opera */\n  padding: 10px;\n}\n\n.roomButtonDiv {\n  margin-bottom: 10px;\n}\n\n.checkboxtext:hover {\n  cursor: pointer;\n}\n\n.checkboxtext\n{\n  /* Checkbox text */\n  padding-left: 10px;\n  font-size: 18px;\n  display: inline;\n}\n\n.checkbox-div {\n  padding: 5px 0px;\n}\n\n.spectator {\n  background-color: black;\n  background-image: url(\"https://i.ytimg.com/vi/aiAmAcaDQrM/maxresdefault.jpg\");\n  background-image: url(\"http://www.nicholasbuer.com/wp-content/uploads/2015/05/Fuencaliente-Pano.jpg\");\n  background-image: url(\"http://wallpoper.com/images/00/41/57/12/stones-excalibur_00415712.jpg\");\n  background-repeat: no-repeat;\n  background-size: cover;\n\n  color: white;\n  display: flex;\n  justify-content: center;\n}\n\n.inner-spectator{\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n.inner-div {\n  padding: 10px;\n}\n\n.outer-div {\n  position: absolute; top: 0; left: 0; height: 100%; width: 100%;\n}\n\nbody {\n  margin:0;\n}\n\n.failedQuest {\n  color: red !important;\n}\n\n.succeededQuest {\n  color: lightgreen !important;\n}\n\n.failed-proposals{\n  margin-top: 5px;\n  color: gray;\n  font-style: italic;\n}\n\n.flex-center-horiz {\n  display: flex;\n  justify-content: center;\n}\n\n.flex-center {\n  display: flex;\n  justify-content: center;\n}\n\n.numberCircle {\n    border-radius: 50%;\n    display: inline-block;\n    margin-right: 10px;\n\n    width: 36px;\n    height: 36px;\n    padding: 8px;\n\n    color: rgba(255, 255, 255, 0.81);\n\n    background: rgba(0, 0, 0, 0.25);\n    border: 2px solid;\n    text-align: center;\n\n    font: 32px Arial, sans-serif;\n}\n", ""]);
 
 	// exports
 
@@ -37593,6 +37593,10 @@
 	});
 	var globals = {};
 
+	globals.MESSAGE_NEUTRAL = 'message_neutral';
+	globals.MESSAGE_GOOD = 'message_good';
+	globals.MESSAGE_EVIL = 'message_evil';
+
 	globals.lastHandStore = 'avalon-online-last-hand';
 
 	globals.numPlayersOnQuests = function (numPlayers) {
@@ -37749,6 +37753,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'amIEvil',
+	    value: function amIEvil() {
+	      return _globals2.default.roleIsEvil(this.getCurrentPlayer().role);
+	    }
+	  }, {
 	    key: 'setInitialGameState',
 	    value: function setInitialGameState() {
 	      var _this3 = this;
@@ -37841,6 +37850,7 @@
 	        i += 1;
 	      });
 	      this.updateCurrentState({ questLeader: newLeader.playerName });
+	      return newLeader.playerName;
 	    }
 	  }, {
 	    key: 'numPlayersOnQuests',
@@ -37942,7 +37952,12 @@
 	  }, {
 	    key: 'setGameMessage',
 	    value: function setGameMessage(s) {
-	      this.updateCurrentState({ gameMessage: s });
+	      var messageType = arguments.length <= 1 || arguments[1] === undefined ? NEUTRAL : arguments[1];
+
+	      this.updateCurrentState({
+	        gameMessage: s,
+	        gameMessageType: messageType
+	      });
 	    }
 	  }, {
 	    key: 'getPlayerList',
@@ -37971,12 +37986,14 @@
 	          _this6.updateCurrentState({ isProposalVoting: false });
 	          if (passes >= fails) {
 	            // console.log("AAAAAAAAAAAAAAAAAAA");
-	            _this6.setGameMessage('Quest is approved (' + ratioString + ')! Quest-goers, choose pass or fail!');
+	            _this6.setGameMessage('Quest is approved (' + ratioString + ')! Quest-goers, choose pass or fail!', _globals2.default.MESSAGE_GOOD);
 	            _this6.updateCurrentState({ isQuestVoting: true });
 	          } else {
+	            var newLeader = _this6.advanceQuestLeader();
 	            // console.log("BBBBBBBBBBBBBBBBBBB");
-	            _this6.setGameMessage('Quest is rejected (' + ratioString + ')!');
-	            _this6.advanceQuestLeader();
+	            var tempMessage = 'Quest is rejected (' + ratioString + ')!';
+	            tempMessage += ' ' + newLeader + ', propose the next quest!';
+	            _this6.setGameMessage(tempMessage, _globals2.default.MESSAGE_EVIL);
 	            _this6.updateCurrentState({ numProposals: _this6.state.gameState.numProposals + 1 });
 	          }
 
@@ -38019,7 +38036,7 @@
 	      e.preventDefault();
 
 	      if (_globals2.default.fbArrLen(this.state.gameState.proposedPlayers) == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
-	        // this.advanceQuestLeader();
+	        this.setGameMessage('Quest is proposed! Everyone, choose \'approve\' or \'fail\'.', _globals2.default.MESSAGE_NEUTRAL);
 	        this.updateCurrentState({ isProposalVoting: true });
 	      }
 	    }
@@ -38043,7 +38060,9 @@
 	    key: 'handleQuestVote',
 	    value: function handleQuestVote(votedPass, e) {
 	      e.preventDefault();
-
+	      if (!votedPass && !this.amIEvil()) {
+	        return;
+	      }
 	      // this.updateCurrentState({ isProposalVoting: false })
 
 	      // console.log(this.state.gameState);
@@ -38100,7 +38119,7 @@
 
 	            this.updateCurrentState({ lastQuestVoteResults: _lodash2.default.shuffle(questVoteResults).join(", ") });
 
-	            this.advanceQuestLeader();
+	            var newLeader = this.advanceQuestLeader();
 
 	            var passes = 0;
 	            var fails = 0;
@@ -38114,11 +38133,22 @@
 
 	            var tempResults = this.state.gameState.questResults;
 	            var currentQuestNum = this.state.gameState.currentQuestNum;
+	            var tempMessage = '';
+	            var questFailed = false;
 	            if (fails >= _globals2.default.numFailsToFail(currentQuestNum, this.props.players.length)) {
+	              questFailed = true;
 	              tempResults[currentQuestNum] = "Fail";
+	              tempMessage += 'Quest fails with ' + fails + ' fail' + (fails === 1 ? '' : 's') + '!';
 	            } else {
+	              if (fails > 0) {
+	                tempMessage += 'Quest passes with ' + fails + ' fail' + (fails === 1 ? '' : 's') + '!';
+	              } else {
+	                tempMessage += 'Quest passes!';
+	              }
 	              tempResults[currentQuestNum] = "Pass";
 	            }
+	            tempMessage += ' ' + newLeader + ', propose the next quest!';
+	            this.setGameMessage(tempMessage, questFailed ? _globals2.default.MESSAGE_EVIL : _globals2.default.MESSAGE_GOOD);
 	            this.updateCurrentState({ numProposals: 0 });
 	            this.updateCurrentState({ questResults: tempResults });
 	            this.updateCurrentState({ currentQuestNum: currentQuestNum + 1 });
@@ -38680,6 +38710,22 @@
 	      return _globals2.default.fbArr(this.state.gameState.proposedPlayers).includes(playerName);
 	    }
 	  }, {
+	    key: 'renderGameMessage',
+	    value: function renderGameMessage() {
+	      if (!this.state.gameState.gameMessage) return null;
+
+	      var msgType = this.state.gameState.gameMessageType;
+	      var messageClass = _globals2.default.MESSAGE_NEUTRAL;
+	      if (msgType) {
+	        messageClass = msgType;
+	      }
+	      return _react2.default.createElement(
+	        'h4',
+	        { className: 'gameMessage ' + messageClass },
+	        this.state.gameState.gameMessage
+	      );
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var recentVoteResults = _react2.default.createElement(
@@ -38687,11 +38733,6 @@
 	        null,
 	        'Most Recent Vote Results: ',
 	        this.state.gameState.lastQuestVoteResults
-	      );
-	      var gameMessage = _react2.default.createElement(
-	        'h4',
-	        null,
-	        this.state.gameState.gameMessage
 	      );
 	      return _react2.default.createElement(
 	        'div',
@@ -38714,7 +38755,7 @@
 	            )
 	          ),
 	          this.getPermanentGameStateDiv(),
-	          this.state.gameState.gameMessage ? gameMessage : null,
+	          this.renderGameMessage(),
 	          _react2.default.createElement(
 	            'h3',
 	            null,
