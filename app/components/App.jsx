@@ -111,6 +111,7 @@ export default class App extends React.Component {
 
     return (
       <div>
+        <h2>Avalonline 2.0</h2>
         { lastHandState ? lastHand : null }
         Create a new game:
         <button type="button" onClick={this.gameClicked.bind(this, null)}>

@@ -20196,6 +20196,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Avalonline 2.0'
+	        ),
 	        lastHandState ? lastHand : null,
 	        'Create a new game:',
 	        _react2.default.createElement(
