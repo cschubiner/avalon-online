@@ -20121,8 +20121,8 @@
 	          var room = childSnapshot.val();
 	          var roomCode = room.roomCode;
 	          var currTimeInMs = Date.now();
-	          if (true) {
-	            // if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
+	          // if (true) {
+	          if (room.dateCreated >= currTimeInMs - 1000 * 60 * 60 * 24 * 1) {
 	            rooms.push(room);
 	          }
 	        });
@@ -20188,9 +20188,21 @@
 	    value: function getMainMenu() {
 	      var lastHandState = amplifyStore(_globals2.default.lastHandStore);
 	      var lastHand = _react2.default.createElement(
-	        'button',
-	        { type: 'button', onClick: this.lastHandClicked.bind(this, lastHandState) },
-	        'Join last hand'
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'i',
+	          null,
+	          'You just left a game. Rejoin?'
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', onClick: this.lastHandClicked.bind(this, lastHandState) },
+	          'Rejoin last hand'
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('br', null)
 	      );
 
 	      return _react2.default.createElement(
@@ -20202,20 +20214,20 @@
 	          'Avalonline 2.0'
 	        ),
 	        lastHandState ? lastHand : null,
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Join an existing game: '
+	        ),
+	        this.getRoomList(),
+	        _react2.default.createElement('br', null),
 	        'Create a new game:',
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
 	          'button',
 	          { type: 'button', onClick: this.gameClicked.bind(this, null) },
 	          'New Game'
-	        ),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Or join an existing game: '
-	        ),
-	        this.getRoomList()
+	        )
 	      );
 	    }
 	  }, {
@@ -37928,6 +37940,11 @@
 	      }
 	    }
 	  }, {
+	    key: 'setGameMessage',
+	    value: function setGameMessage(s) {
+	      this.updateCurrentState({ gameMessage: s });
+	    }
+	  }, {
 	    key: 'getPlayerList',
 	    value: function getPlayerList() {
 	      var _this6 = this;
@@ -37950,12 +37967,15 @@
 	            }
 	          }
 
+	          var ratioString = passes + '-' + fails;
 	          _this6.updateCurrentState({ isProposalVoting: false });
 	          if (passes >= fails) {
 	            // console.log("AAAAAAAAAAAAAAAAAAA");
+	            _this6.setGameMessage('Quest is approved (' + ratioString + ')! Quest-goers, choose pass or fail!');
 	            _this6.updateCurrentState({ isQuestVoting: true });
 	          } else {
 	            // console.log("BBBBBBBBBBBBBBBBBBB");
+	            _this6.setGameMessage('Quest is rejected (' + ratioString + ')!');
 	            _this6.advanceQuestLeader();
 	            _this6.updateCurrentState({ numProposals: _this6.state.gameState.numProposals + 1 });
 	          }
@@ -38176,6 +38196,11 @@
 	        location.reload();
 	      }
 	    }
+
+	    // <button type="button" onClick={this.restartHand.bind(this)}>
+	    //   RestartHand
+	    // </button>
+
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -38186,11 +38211,6 @@
 	          'div',
 	          { className: 'inner-div' },
 	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', onClick: this.restartHand.bind(this) },
-	            'RestartHand'
-	          ),
-	          _react2.default.createElement(
 	            'h1',
 	            null,
 	            'Hand Room: ',
@@ -38200,7 +38220,7 @@
 	          _react2.default.createElement(
 	            'h3',
 	            null,
-	            'Proposed Questees by ',
+	            'Proposed Questers by ',
 	            this.state.gameState.questLeader,
 	            ' (',
 	            _globals2.default.fbArrLen(this.state.gameState.proposedPlayers),
@@ -38620,6 +38640,8 @@
 	          _react2.default.createElement(
 	            'span',
 	            { className: "checkboxtext" + (isLeader ? " bold" : "") + (_this4.playerIsAProposedPlayer(player.playerName) ? " green" : "") },
+	            isLeader ? '-' : '',
+	            ' ',
 	            player.playerName + postStr
 	          ),
 	          _react2.default.createElement('br', null)
@@ -38660,6 +38682,17 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var recentVoteResults = _react2.default.createElement(
+	        'h3',
+	        null,
+	        'Most Recent Vote Results: ',
+	        this.state.gameState.lastQuestVoteResults
+	      );
+	      var gameMessage = _react2.default.createElement(
+	        'h4',
+	        null,
+	        this.state.gameState.gameMessage
+	      );
 	      return _react2.default.createElement(
 	        'div',
 	        { className: "outer-div spectator" },
@@ -38681,23 +38714,19 @@
 	            )
 	          ),
 	          this.getPermanentGameStateDiv(),
+	          this.state.gameState.gameMessage ? gameMessage : null,
 	          _react2.default.createElement(
 	            'h3',
 	            null,
 	            this.state.gameState.questLeader,
-	            '\'s Proposed Questees (',
+	            '\'s Proposed Questers (',
 	            _globals2.default.fbArrLen(this.state.gameState.proposedPlayers),
 	            '/',
 	            this.numPlayersOnQuests()[this.state.gameState.currentQuestNum],
 	            '):'
 	          ),
 	          this.getPlayerList(),
-	          _react2.default.createElement(
-	            'h3',
-	            null,
-	            'Most Recent Vote Results: ',
-	            this.state.gameState.lastQuestVoteResults
-	          ),
+	          this.state.gameState.lastQuestVoteResults !== 'n/a' ? recentVoteResults : null,
 	          _react2.default.createElement(_RoleList2.default, {
 	            playerCount: this.props.players.length
 	          })

@@ -198,6 +198,10 @@ export default class GameRoom extends React.Component {
     }
   }
 
+  setGameMessage(s) {
+    this.updateCurrentState({gameMessage: s});
+  }
+
   getPlayerList() {
     let players = [];
 
@@ -217,12 +221,15 @@ export default class GameRoom extends React.Component {
           }
         }
 
+        const ratioString = `${passes}-${fails}`;
         this.updateCurrentState({ isProposalVoting: false });
         if (passes >= fails) {
           // console.log("AAAAAAAAAAAAAAAAAAA");
+          this.setGameMessage(`Quest is approved (${ratioString})! Quest-goers, choose pass or fail!`)
           this.updateCurrentState({ isQuestVoting: true });
         } else {
           // console.log("BBBBBBBBBBBBBBBBBBB");
+          this.setGameMessage(`Quest is rejected (${ratioString})!`)
           this.advanceQuestLeader();
           this.updateCurrentState({ numProposals: this.state.gameState.numProposals + 1 });
         }
@@ -423,16 +430,16 @@ export default class GameRoom extends React.Component {
 
   }
 
+        // <button type="button" onClick={this.restartHand.bind(this)}>
+        //   RestartHand
+        // </button>
   render() {
     return (
       <div className={"outer-div"}>
       <div className="inner-div">
-        <button type="button" onClick={this.restartHand.bind(this)}>
-          RestartHand
-        </button>
         <h1>Hand Room: {this.props.roomCode}</h1>
         { this.getPermanentGameStateDiv() }
-        <h3>Proposed Questees by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
+        <h3>Proposed Questers by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         { this.getProposalVoteDiv() }
         <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>

@@ -45,8 +45,8 @@ export default class App extends React.Component {
         const room = childSnapshot.val();
         const roomCode = room.roomCode;
         const currTimeInMs = Date.now();
-        if (true) {
-        // if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
+        // if (true) {
+        if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
           rooms.push(room);
         }
       });
@@ -104,23 +104,28 @@ export default class App extends React.Component {
   getMainMenu() {
     const lastHandState = amplifyStore(globals.lastHandStore);
     const lastHand = (
-      <button type="button" onClick={this.lastHandClicked.bind(this, lastHandState)}>
-        Join last hand
-      </button>
+      <div>
+        <i>You just left a game. Rejoin?</i>
+        <br/>
+        <button type="button" onClick={this.lastHandClicked.bind(this, lastHandState)}>
+          Rejoin last hand
+        </button>
+        <br/>
+        <br/>
+      </div>
     );
 
     return (
       <div>
         <h2>Avalonline 2.0</h2>
         { lastHandState ? lastHand : null }
-        Create a new game:
+        <p>Join an existing game: </p>
+        { this.getRoomList() }
+        <br/>
+        Create a new game:<br/>
         <button type="button" onClick={this.gameClicked.bind(this, null)}>
           New Game
         </button>
-        <br/>
-        <br/>
-        <p> Or join an existing game: </p>
-        { this.getRoomList() }
       </div>
     );
   }

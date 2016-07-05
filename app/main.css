@@ -18,6 +18,11 @@
   color: black;
 }
 
+.gameMessage {
+  font-size: 25px;
+  width: 341px;
+}
+
 .green {
   color: #76ff76;
 }

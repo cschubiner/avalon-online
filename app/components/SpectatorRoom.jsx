@@ -102,7 +102,7 @@ export default class GameRoom extends React.Component {
       players.push(
         <div className="checkbox-div">
           <span className={"checkboxtext" + (isLeader ? " bold" : "") + (this.playerIsAProposedPlayer(player.playerName) ? " green" : "")} >
-            { player.playerName + postStr }
+            {isLeader ? '-' : ''} { player.playerName + postStr }
           </span>
           <br/>
         </div>
@@ -141,6 +141,12 @@ export default class GameRoom extends React.Component {
   }
 
   render() {
+    const recentVoteResults = (
+      <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
+    );
+    const gameMessage = (
+      <h4 className='gameMessage'>{this.state.gameState.gameMessage}</h4>
+    );
     return (
       <div className={"outer-div spectator"}>
       <div className="inner-div inner-spectator">
@@ -149,9 +155,10 @@ export default class GameRoom extends React.Component {
           <span className='roomCode'>{this.props.roomCode}</span>
         </div>
         { this.getPermanentGameStateDiv() }
-        <h3>{this.state.gameState.questLeader}'s Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
+        { this.state.gameState.gameMessage ? gameMessage : null }
+        <h3>{this.state.gameState.questLeader}'s Proposed Questers ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
-        <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
+        { this.state.gameState.lastQuestVoteResults !== 'n/a' ? recentVoteResults : null }
         <RoleList
           playerCount={this.props.players.length}
         />
