@@ -99,7 +99,7 @@
 
 
 	// module
-	exports.push([module.id, ".bold {\n  font-weight: bold;\n}\n\n.italics {\n  font-style: italic;\n}\n\n.evil {\n  color: red;\n}\n\n.good {\n  color: lightblue;\n}\n\n.black {\n  color: black;\n}\n\ninput[type=checkbox] {\n  /* Double-sized Checkboxes */\n  -ms-transform: scale(2); /* IE */\n  -moz-transform: scale(2); /* FF */\n  -webkit-transform: scale(2); /* Safari and Chrome */\n  -o-transform: scale(2); /* Opera */\n  padding: 10px;\n}\n\n.checkboxtext:hover {\n  cursor: pointer;\n}\n\n.checkboxtext\n{\n  /* Checkbox text */\n  padding-left: 10px;\n  font-size: 18px;\n  display: inline;\n}\n\n.checkbox-div {\n  padding: 5px 0px;\n}\n\n.spectator {\n  background-color: black;\n  background-image: url(\"https://i.ytimg.com/vi/aiAmAcaDQrM/maxresdefault.jpg\");\n  background-image: url(\"http://www.nicholasbuer.com/wp-content/uploads/2015/05/Fuencaliente-Pano.jpg\");\n  background-image: url(\"http://wallpoper.com/images/00/41/57/12/stones-excalibur_00415712.jpg\");\n  background-repeat: no-repeat;\n  background-size: cover;\n\n  color: white;\n  display: flex;\n  justify-content: center;\n}\n\n.inner-spectator{\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n.inner-div {\n  padding: 10px;\n}\n\n.outer-div {\n  position: absolute; top: 0; left: 0; height: 100%; width: 100%;\n}\n\nbody {\n  margin:0;\n}\n\n.failedQuest {\n  color: red !important;\n}\n\n.succeededQuest {\n  color: lightgreen !important;\n}\n\n.failed-proposals{\n  margin-top: 5px;\n  color: gray;\n  font-style: italic;\n}\n\n.flex-center-horiz {\n  display: flex;\n  justify-content: center;\n}\n\n.flex-center {\n  display: flex;\n  justify-content: center;\n}\n\n.numberCircle {\n    border-radius: 50%;\n    display: inline-block;\n    margin-right: 10px;\n\n    width: 36px;\n    height: 36px;\n    padding: 8px;\n\n    color: rgba(255, 255, 255, 0.81);\n\n    background: rgba(0, 0, 0, 0.25);\n    border: 2px solid;\n    text-align: center;\n\n    font: 32px Arial, sans-serif;\n}\n", ""]);
+	exports.push([module.id, ".bold {\n  font-weight: bold;\n}\n\n.italics {\n  font-style: italic;\n}\n\n.evil {\n  color: red;\n}\n\n.good {\n  color: lightblue;\n}\n\n.black {\n  color: black;\n}\n\n.green {\n  color: #76ff76;\n}\n\ninput[type=checkbox] {\n  /* Double-sized Checkboxes */\n  -ms-transform: scale(2); /* IE */\n  -moz-transform: scale(2); /* FF */\n  -webkit-transform: scale(2); /* Safari and Chrome */\n  -o-transform: scale(2); /* Opera */\n  padding: 10px;\n}\n\n.roomButtonDiv {\n  margin-bottom: 10px;\n}\n\n.checkboxtext:hover {\n  cursor: pointer;\n}\n\n.checkboxtext\n{\n  /* Checkbox text */\n  padding-left: 10px;\n  font-size: 18px;\n  display: inline;\n}\n\n.checkbox-div {\n  padding: 5px 0px;\n}\n\n.spectator {\n  background-color: black;\n  background-image: url(\"https://i.ytimg.com/vi/aiAmAcaDQrM/maxresdefault.jpg\");\n  background-image: url(\"http://www.nicholasbuer.com/wp-content/uploads/2015/05/Fuencaliente-Pano.jpg\");\n  background-image: url(\"http://wallpoper.com/images/00/41/57/12/stones-excalibur_00415712.jpg\");\n  background-repeat: no-repeat;\n  background-size: cover;\n\n  color: white;\n  display: flex;\n  justify-content: center;\n}\n\n.inner-spectator{\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n.inner-div {\n  padding: 10px;\n}\n\n.outer-div {\n  position: absolute; top: 0; left: 0; height: 100%; width: 100%;\n}\n\nbody {\n  margin:0;\n}\n\n.failedQuest {\n  color: red !important;\n}\n\n.succeededQuest {\n  color: lightgreen !important;\n}\n\n.failed-proposals{\n  margin-top: 5px;\n  color: gray;\n  font-style: italic;\n}\n\n.flex-center-horiz {\n  display: flex;\n  justify-content: center;\n}\n\n.flex-center {\n  display: flex;\n  justify-content: center;\n}\n\n.numberCircle {\n    border-radius: 50%;\n    display: inline-block;\n    margin-right: 10px;\n\n    width: 36px;\n    height: 36px;\n    padding: 8px;\n\n    color: rgba(255, 255, 255, 0.81);\n\n    background: rgba(0, 0, 0, 0.25);\n    border: 2px solid;\n    text-align: center;\n\n    font: 32px Arial, sans-serif;\n}\n", ""]);
 
 	// exports
 
@@ -20053,9 +20053,13 @@
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _queryString = __webpack_require__(174);
+	var _queryString = __webpack_require__(175);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
+
+	var _globals = __webpack_require__(170);
+
+	var _globals2 = _interopRequireDefault(_globals);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20067,6 +20071,8 @@
 	//delete!
 
 
+	var amplifyStore = __webpack_require__(174);
+
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
 
@@ -20077,32 +20083,56 @@
 
 	    _this.state = {
 	      isOnMainMenu: true,
-	      rooms: [],
+	      roomCodes: [],
 	      currentRoomCode: null,
-	      players: [] };
+	      players: [], //delete
+	      wantsToJoinLastHand: false
+	    };
 	    return _this;
 	  }
 
 	  _createClass(App, [{
 	    key: 'getURLParams',
-	    //delete
 	    value: function getURLParams() {
 	      return _queryString2.default.parse(location.search);
+	    }
+	  }, {
+	    key: 'cleanupOldRooms',
+	    value: function cleanupOldRooms() {
+	      var ref = new _firebase2.default('https://avalonline.firebaseio.com/games');
+	      var now = Date.now();
+	      var cutoff = now - 4 * 60 * 60 * 1000;
+	      var old = ref.orderByChild('timestamp').startAt(cutoff).limitToLast(1);
+	      var listener = old.on('child_added', function (snapshot) {
+	        snapshot.ref().remove();
+	      });
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
+	      this.cleanupOldRooms();
+
 	      var ref = new _firebase2.default('https://avalonline.firebaseio.com/games');
 	      ref.on("value", function (snapshot) {
 	        var rooms = [];
 	        snapshot.forEach(function (childSnapshot) {
-	          var key = childSnapshot.key();
-	          var childData = childSnapshot.val();
-	          rooms.push(childData);
+	          var room = childSnapshot.val();
+	          var roomCode = room.roomCode;
+	          var currTimeInMs = Date.now();
+	          if (true) {
+	            // if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
+	            rooms.push(room);
+	          }
 	        });
-	        _this2.setState({ 'rooms': rooms });
+
+	        var roomCodes = rooms.sort(function (a, b) {
+	          return b.dateCreated - a.dateCreated;
+	        }).map(function (r) {
+	          return r.roomCode;
+	        });
+	        _this2.setState({ 'roomCodes': roomCodes });
 	      });
 
 	      if (this.getURLParams().debug) {
@@ -20137,18 +20167,37 @@
 
 	      var fbGame = new _firebase2.default('https://avalonline.firebaseio.com/games/' + roomCode);
 	      var roomCodeObj = {
-	        'roomCode': roomCode
+	        'roomCode': roomCode,
+	        'dateCreated': Date.now()
 	      };
 
 	      fbGame.update(roomCodeObj);
 	      this.setState(roomCodeObj);
 	    }
 	  }, {
+	    key: 'lastHandClicked',
+	    value: function lastHandClicked(lastHandState) {
+	      this.setState(lastHandState);
+	      this.wantsToJoinLastHand = true;
+	      this.roomCode = lastHandState.roomCode;
+	      this.setState({ wantsToJoinLastHand: true });
+	      this.populatePlayerState();
+	    }
+	  }, {
 	    key: 'getMainMenu',
 	    value: function getMainMenu() {
+	      var lastHandState = amplifyStore(_globals2.default.lastHandStore);
+	      var lastHand = _react2.default.createElement(
+	        'button',
+	        { type: 'button', onClick: this.lastHandClicked.bind(this, lastHandState) },
+	        'Join last hand'
+	      );
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        lastHandState ? lastHand : null,
+	        'Create a new game:',
 	        _react2.default.createElement(
 	          'button',
 	          { type: 'button', onClick: this.gameClicked.bind(this, null) },
@@ -20170,19 +20219,27 @@
 	      var _this3 = this;
 
 	      var rooms = [];
-	      this.state.rooms.forEach(function (roomData) {
+	      this.state.roomCodes.forEach(function (roomCode) {
 	        rooms.push(_react2.default.createElement(
 	          'div',
-	          null,
+	          { className: 'roomButtonDiv' },
 	          _react2.default.createElement(
 	            'button',
-	            { type: 'button', onClick: _this3.gameClicked.bind(_this3, roomData.roomCode) },
-	            roomData.roomCode
+	            { type: 'button', onClick: _this3.gameClicked.bind(_this3, roomCode) },
+	            roomCode
 	          )
 	        ));
 	      });
 
 	      return rooms;
+	    }
+	  }, {
+	    key: 'getDefaultRoomCode',
+	    value: function getDefaultRoomCode() {
+	      if (this.wantsToJoinLastHand || this.state.wantsToJoinLastHand) {
+	        return this.roomCode ? this.roomCode : this.state.roomCode;
+	      }
+	      return this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary';
 	    }
 
 	    //if debug==true vvvvvv -----------------------------------------------------------------------------------------------
@@ -20192,7 +20249,7 @@
 	    value: function populatePlayerState() {
 	      var _this4 = this;
 
-	      var ref = new _firebase2.default('https://avalonline.firebaseio.com/games/cary/players');
+	      var ref = new _firebase2.default('https://avalonline.firebaseio.com/games/' + this.getDefaultRoomCode() + '/players');
 	      ref.on("value", function (snapshot) {
 	        var players = [];
 	        snapshot.forEach(function (childSnapshot) {
@@ -20208,9 +20265,8 @@
 	    value: function getGameRoom() {
 	      if (this.state.players.length < 3) return null;
 	      return _react2.default.createElement(_GameRoom2.default, {
-	        roomCode: this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary',
-	        isSpectator: this.getURLParams().isSpectator ? true : false,
-	        playerName: this.getURLParams().playerName,
+	        roomCode: this.getDefaultRoomCode(),
+	        playerName: this.state.wantsToJoinLastHand ? this.state.playerName : this.getURLParams().playerName,
 	        players: this.state.players
 	      });
 	    }
@@ -20218,7 +20274,7 @@
 	    key: 'getSpectatorRoom',
 	    value: function getSpectatorRoom() {
 	      return _react2.default.createElement(_SpectatorRoom2.default, {
-	        roomCode: this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary',
+	        roomCode: this.getDefaultRoomCode(),
 	        players: this.state.players
 	      });
 	    }
@@ -20234,8 +20290,8 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      if (this.getURLParams().debug) {
-	        if (this.getURLParams().isSpectator) {
+	      if (this.getURLParams().debug || this.state.wantsToJoinLastHand) {
+	        if (this.getURLParams().isSpectator || this.state.isSpectator) {
 	          return this.getSpectatorRoom();
 	        }
 	        return this.getGameRoom();
@@ -20283,6 +20339,10 @@
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
+	var _globals = __webpack_require__(170);
+
+	var _globals2 = _interopRequireDefault(_globals);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20290,6 +20350,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var amplifyStore = __webpack_require__(174);
 
 	var propTypes = {
 	  roomCode: _react.PropTypes.string.isRequired
@@ -20317,7 +20379,14 @@
 	      if (!isSpectator && (this.state.playerName.length <= 2 || this.state.playerName.length >= 21)) {
 	        alert("Your name must be between 3 and 20 characters.");
 	      } else {
-	        this.setState({ playerName: this.state.playerName.trim(), isOnJoinRoom: false, isSpectator: isSpectator });
+	        var newState = {
+	          playerName: this.state.playerName.trim(),
+	          isOnJoinRoom: false,
+	          isSpectator: isSpectator,
+	          roomCode: this.props.roomCode
+	        };
+	        amplifyStore(_globals2.default.lastHandStore, newState);
+	        this.setState(newState);
 	      }
 	    }
 	  }, {
@@ -37130,7 +37199,21 @@
 	});
 	var globals = {};
 
-	globals.numPlayersOnQuests = [2, 3, 4, 3, 4];
+	globals.lastHandStore = 'avalon-online-last-hand';
+
+	globals.numPlayersOnQuests = function (numPlayers) {
+	  if (numPlayers === 5) {
+	    return [2, 3, 2, 3, 3];
+	  }
+	  if (numPlayers === 6) {
+	    return [2, 3, 4, 3, 4];
+	  }
+	  if (numPlayers === 7) {
+	    return [2, 3, 3, 4, 4];
+	  }
+
+	  return [3, 4, 4, 5, 5];
+	};
 
 	// 0 indexed
 	globals.numFailsToFail = function (questNum, numPlayers) {
@@ -37366,6 +37449,11 @@
 	      this.updateCurrentState({ questLeader: newLeader.playerName });
 	    }
 	  }, {
+	    key: 'numPlayersOnQuests',
+	    value: function numPlayersOnQuests() {
+	      return _globals2.default.numPlayersOnQuests(this.props.players.length);
+	    }
+	  }, {
 	    key: 'updateCurrentState',
 	    value: function updateCurrentState(updatedState) {
 	      var gameStateRef = new _firebase2.default('https://avalonline.firebaseio.com/games/' + this.props.roomCode + '/gameState');
@@ -37392,7 +37480,7 @@
 	          'div',
 	          null,
 	          '# Players on Quests: ',
-	          _globals2.default.numPlayersOnQuests.join(", ")
+	          this.numPlayersOnQuests().join(", ")
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -37439,7 +37527,7 @@
 	      }
 	      console.log(selectedPlayerName);
 	      if (!this.playerIsAProposedPlayer(selectedPlayerName)) {
-	        if (_globals2.default.fbArrLen(this.state.gameState.proposedPlayers) < _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+	        if (_globals2.default.fbArrLen(this.state.gameState.proposedPlayers) < this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
 
 	          var tempPlayers = _globals2.default.fbArr(this.state.gameState.proposedPlayers);
 
@@ -37528,7 +37616,7 @@
 	    value: function handleProposeClicked(e) {
 	      e.preventDefault();
 
-	      if (_globals2.default.fbArrLen(this.state.gameState.proposedPlayers) == _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+	      if (_globals2.default.fbArrLen(this.state.gameState.proposedPlayers) == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
 	        // this.advanceQuestLeader();
 	        this.updateCurrentState({ isProposalVoting: true });
 	      }
@@ -37578,6 +37666,11 @@
 	            'div',
 	            null,
 	            _react2.default.createElement(
+	              'div',
+	              null,
+	              'You\'re on the quest! Choose to pass or fail'
+	            ),
+	            _react2.default.createElement(
 	              'button',
 	              { type: 'button', onClick: this.handleQuestVote.bind(this, true) },
 	              'Pass'
@@ -37597,7 +37690,7 @@
 	          var shouldShowVoteButtons = proposedPlayers.indexOf(this.getCurrentPlayer().playerName) != -1 && questVotePlayersWhoVoted.indexOf(this.getCurrentPlayer().playerName) == -1;
 
 	          var questVoteResults = _globals2.default.fbArr(this.state.gameState.questVoteResults);
-	          if (questVoteResults.length == _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
+	          if (questVoteResults.length == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
 	            this.updateCurrentState({ isQuestVoting: false });
 
 	            this.updateCurrentState({ questVoteResults: [] });
@@ -37730,7 +37823,7 @@
 	            ' (',
 	            _globals2.default.fbArrLen(this.state.gameState.proposedPlayers),
 	            '/',
-	            _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum],
+	            this.numPlayersOnQuests()[this.state.gameState.currentQuestNum],
 	            '):'
 	          ),
 	          this.getPlayerList(),
@@ -38060,6 +38153,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'numPlayersOnQuests',
+	    value: function numPlayersOnQuests() {
+	      return _globals2.default.numPlayersOnQuests(this.props.players.length);
+	    }
+	  }, {
 	    key: 'getQuestCircles',
 	    value: function getQuestCircles() {
 	      var _this3 = this;
@@ -38067,7 +38165,7 @@
 	      // this.state.gameState.questResults
 	      var circles = [];
 	      var i = 0;
-	      _globals2.default.numPlayersOnQuests.forEach(function (numPlayers) {
+	      _globals2.default.numPlayersOnQuests(this.props.players.length).forEach(function (numPlayers) {
 	        var questFailed = _this3.state.gameState.questResults[i] === 'Fail';
 	        var questSucceeded = _this3.state.gameState.questResults[i] === 'Pass';
 	        var twoFailsNeeded = _globals2.default.numFailsToFail(i, _this3.props.players.length) == 2;
@@ -38130,22 +38228,20 @@
 	        var isLeader = player.playerName === _this4.state.gameState.questLeader;
 
 	        var postStr = "";
-	        // if (this.state.gameState.lastProposalVotes) {
-	        //   postStr = ` (last vote: ${this.state.gameState.lastProposalVotes[player.playerName]})`
-	        // }
-
-	        if (_this4.playerIsAProposedPlayer(player.playerName)) {
-	          players.push(_react2.default.createElement(
-	            'div',
-	            { className: 'checkbox-div' },
-	            _react2.default.createElement(
-	              'span',
-	              { className: "checkboxtext" + (isLeader ? " bold" : "") },
-	              player.playerName + postStr
-	            ),
-	            _react2.default.createElement('br', null)
-	          ));
+	        if (_this4.state.gameState.lastProposalVotes) {
+	          postStr = ' (last vote: ' + _this4.state.gameState.lastProposalVotes[player.playerName] + ')';
 	        }
+
+	        players.push(_react2.default.createElement(
+	          'div',
+	          { className: 'checkbox-div' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: "checkboxtext" + (isLeader ? " bold" : "") + (_this4.playerIsAProposedPlayer(player.playerName) ? " green" : "") },
+	            player.playerName + postStr
+	          ),
+	          _react2.default.createElement('br', null)
+	        ));
 	      });
 
 	      return _react2.default.createElement(
@@ -38154,110 +38250,6 @@
 	        players,
 	        _react2.default.createElement('br', null)
 	      );
-	    }
-	  }, {
-	    key: 'getProposalVoteDiv',
-	    value: function getProposalVoteDiv() {
-	      // console.log(this.state.gameState.isProposalVoting);
-	      if (!this.state.gameState.isProposalVoting) {
-
-	        if (this.state.gameState.isQuestVoting) {
-
-	          var questButtons = _react2.default.createElement(
-	            'div',
-	            null,
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', onClick: this.handleQuestVote.bind(this, true) },
-	              'Pass'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', onClick: this.handleQuestVote.bind(this, false) },
-	              'Fail'
-	            )
-	          );
-
-	          // this.state.gameState.isQuestVoting
-	          // if is quest voting and current player is part of proposed quests list, show questButtons
-
-	          var proposedPlayers = _globals2.default.fbArr(this.state.gameState.proposedPlayers);
-	          var questVotePlayersWhoVoted = _globals2.default.fbArr(this.state.gameState.questVotePlayersWhoVoted);
-	          var shouldShowVoteButtons = proposedPlayers.indexOf(this.getCurrentPlayer().playerName) != -1 && questVotePlayersWhoVoted.indexOf(this.getCurrentPlayer().playerName) == -1;
-
-	          var questVoteResults = _globals2.default.fbArr(this.state.gameState.questVoteResults);
-	          if (questVoteResults.length == _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
-	            this.updateCurrentState({ isQuestVoting: false });
-
-	            this.updateCurrentState({ questVoteResults: [] });
-	            this.updateCurrentState({ questVotePlayersWhoVoted: [] });
-
-	            this.updateCurrentState({ lastQuestVoteResults: _lodash2.default.shuffle(questVoteResults).join(", ") });
-
-	            this.advanceQuestLeader();
-
-	            var passes = 0;
-	            var fails = 0;
-	            questVoteResults.forEach(function (res) {
-	              if (res === "Pass") {
-	                passes += 1;
-	              } else {
-	                fails += 1;
-	              }
-	            });
-
-	            var tempResults = this.state.gameState.questResults;
-	            var currentQuestNum = this.state.gameState.currentQuestNum;
-	            if (fails > 0) {
-	              tempResults[currentQuestNum] = "Fail";
-	            } else {
-	              tempResults[currentQuestNum] = "Pass";
-	            }
-	            this.updateCurrentState({ numProposals: 0 });
-	            this.updateCurrentState({ questResults: tempResults });
-	            this.updateCurrentState({ currentQuestNum: currentQuestNum + 1 });
-	          } else {
-	            return shouldShowVoteButtons ? questButtons : null;
-	          }
-	        } else {
-	          return _react2.default.createElement('div', null);
-	        }
-	      } else {
-
-	        var haveIVoted = this.state.gameState.proposalVotes[this.getCurrentPlayer().playerName] != "n/a";
-
-	        var proposalButtons = _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', onClick: this.handleProposalVote.bind(this, true) },
-	            'Approve'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', onClick: this.handleProposalVote.bind(this, false) },
-	            'Reject'
-	          )
-	        );
-
-	        var voteCountHeader = _react2.default.createElement(
-	          'h3',
-	          null,
-	          'Votes (',
-	          this.getNumPlayersWhoHaveProposalVoted(),
-	          '/',
-	          this.props.players.length,
-	          ')'
-	        );
-
-	        return _react2.default.createElement(
-	          'div',
-	          null,
-	          this.haveAllPlayersProposalVoted() ? null : voteCountHeader,
-	          haveIVoted ? null : proposalButtons
-	        );
-	      }
 	    }
 	  }, {
 	    key: 'getNumPlayersWhoHaveProposalVoted',
@@ -38277,6 +38269,11 @@
 	    key: 'haveAllPlayersProposalVoted',
 	    value: function haveAllPlayersProposalVoted() {
 	      return this.getNumPlayersWhoHaveProposalVoted() === this.props.players.length;
+	    }
+	  }, {
+	    key: 'playerIsAProposedPlayer',
+	    value: function playerIsAProposedPlayer(playerName) {
+	      return _globals2.default.fbArr(this.state.gameState.proposedPlayers).includes(playerName);
 	    }
 	  }, {
 	    key: 'render',
@@ -38309,11 +38306,10 @@
 	            '\'s Proposed Questees (',
 	            _globals2.default.fbArrLen(this.state.gameState.proposedPlayers),
 	            '/',
-	            _globals2.default.numPlayersOnQuests[this.state.gameState.currentQuestNum],
+	            this.numPlayersOnQuests()[this.state.gameState.currentQuestNum],
 	            '):'
 	          ),
 	          this.getPlayerList(),
-	          this.getProposalVoteDiv(),
 	          _react2.default.createElement(
 	            'h3',
 	            null,
@@ -38338,10 +38334,44 @@
 
 /***/ },
 /* 174 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/*!
+	 * Amplify Store - Persistent Client-Side Storage 1.1.2
+	 *
+	 * Copyright 2011 - 2013 appendTo LLC. (http://appendto.com/team)
+	 * Dual licensed under the MIT or GPL licenses.
+	 * http://appendto.com/open-source-licenses
+	 *
+	 * http://amplifyjs.com
+	 */
+	var store=function(b,d,a){var c=store.type;
+	if(a&&a.type&&a.type in store.types){c=a.type;}return store.types[c](b,d,a||{});};store.types={};store.type=null;store.addType=function(a,b){if(!store.type){store.type=a;
+	}store.types[a]=b;store[a]=function(d,f,c){c=c||{};c.type=a;return store(d,f,c);};};store.error=function(){return"amplify.store quota exceeded";};var rprefix=/^__amplify__/;
+	function createFromStorageInterface(a,b){store.addType(a,function(m,l,n){var d,k,f,g,h=l,c=(new Date()).getTime();if(!m){h={};g=[];f=0;try{m=b.length;while(m=b.key(f++)){if(rprefix.test(m)){k=JSON.parse(b.getItem(m));
+	if(k.expires&&k.expires<=c){g.push(m);}else{h[m.replace(rprefix,"")]=k.data;}}}while(m=g.pop()){b.removeItem(m);}}catch(j){}return h;}m="__amplify__"+m;
+	if(l===undefined){d=b.getItem(m);k=d?JSON.parse(d):{expires:-1};if(k.expires&&k.expires<=c){b.removeItem(m);}else{return k.data;}}else{if(l===null){b.removeItem(m);
+	}else{k=JSON.stringify({data:l,expires:n.expires?c+n.expires:null});try{b.setItem(m,k);}catch(j){store[a]();try{b.setItem(m,k);}catch(j){throw store.error();
+	}}}}return h;});}for(var webStorageType in {localStorage:1,sessionStorage:1}){try{if(typeof window!=="undefined"){window[webStorageType].setItem("__amplify__","x");
+	window[webStorageType].removeItem("__amplify__");createFromStorageInterface(webStorageType,window[webStorageType]);}}catch(e){}}if(typeof window!=="undefined"&&!store.types.localStorage&&window.globalStorage){try{createFromStorageInterface("globalStorage",window.globalStorage[window.location.hostname]);
+	if(store.type==="sessionStorage"){store.type="globalStorage";}}catch(e){}}(function(){if(store.types.localStorage||typeof window=="undefined"){return;}var c=document.createElement("div"),b="amplify";
+	c.style.display="none";document.getElementsByTagName("head")[0].appendChild(c);try{c.addBehavior("#default#userdata");c.load(b);}catch(a){c.parentNode.removeChild(c);
+	return;}store.addType("userData",function(o,n,p){c.load(b);var k,m,h,f,g,j=n,d=(new Date()).getTime();if(!o){j={};g=[];f=0;while(k=c.XMLDocument.documentElement.attributes[f++]){m=JSON.parse(k.value);
+	if(m.expires&&m.expires<=d){g.push(k.name);}else{j[k.name]=m.data;}}while(o=g.pop()){c.removeAttribute(o);}c.save(b);return j;}o=o.replace(/[^\-._0-9A-Za-z\xb7\xc0-\xd6\xd8-\xf6\xf8-\u037d\u037f-\u1fff\u200c-\u200d\u203f\u2040\u2070-\u218f]/g,"-");
+	o=o.replace(/^-/,"_-");if(n===undefined){k=c.getAttribute(o);m=k?JSON.parse(k):{expires:-1};if(m.expires&&m.expires<=d){c.removeAttribute(o);}else{return m.data;
+	}}else{if(n===null){c.removeAttribute(o);}else{h=c.getAttribute(o);m=JSON.stringify({data:n,expires:(p.expires?(d+p.expires):null)});c.setAttribute(o,m);
+	}}try{c.save(b);}catch(l){if(h===null){c.removeAttribute(o);}else{c.setAttribute(o,h);}store.userData();try{c.setAttribute(o,m);c.save(b);}catch(l){if(h===null){c.removeAttribute(o);
+	}else{c.setAttribute(o,h);}throw store.error();}}return j;});}());(function(){var c={},a={};function b(d){return d===undefined?undefined:JSON.parse(JSON.stringify(d));
+	}store.addType("memory",function(f,g,d){if(!f){return b(c);}if(g===undefined){return b(c[f]);}if(a[f]){clearTimeout(a[f]);delete a[f];}if(g===null){delete c[f];
+	return null;}c[f]=g;if(d.expires){a[f]=setTimeout(function(){delete c[f];delete a[f];},d.expires);}return g;});}());module.exports=store;
+
+/***/ },
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var strictUriEncode = __webpack_require__(175);
+	var strictUriEncode = __webpack_require__(176);
 
 	function encode(value, strict) {
 		return strict ? strictUriEncode(value) : encodeURIComponent(value);
@@ -38433,7 +38463,7 @@
 
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import Firebase from 'firebase';
 import WaitingRoom from './WaitingRoom.jsx';
 import _ from 'lodash';
+import globals from '../globals.js'
+const amplifyStore = require('amplify-store');
 
 const propTypes = {
   roomCode: PropTypes.string.isRequired,
@@ -21,7 +23,14 @@ export default class JoinRoom extends React.Component {
     if (!isSpectator && (this.state.playerName.length <= 2 || this.state.playerName.length >= 21)) {
       alert("Your name must be between 3 and 20 characters.");
     } else {
-      this.setState({ playerName: this.state.playerName.trim(), isOnJoinRoom: false, isSpectator: isSpectator })
+      const newState = {
+        playerName: this.state.playerName.trim(),
+        isOnJoinRoom: false,
+        isSpectator: isSpectator,
+        roomCode: this.props.roomCode,
+      };
+      amplifyStore(globals.lastHandStore, newState);
+      this.setState(newState);
     }
   }
 

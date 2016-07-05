@@ -126,7 +126,7 @@ export default class GameRoom extends React.Component {
   }
 
   numPlayersOnQuests() {
-    return this.numPlayersOnQuests(this.props.players.length);
+    return globals.numPlayersOnQuests(this.props.players.length);
   }
 
   updateCurrentState(updatedState) {
@@ -312,6 +312,7 @@ export default class GameRoom extends React.Component {
 
         const questButtons = (
           <div>
+            <div>You're on the quest! Choose to pass or fail</div>
             <button type="button" onClick={this.handleQuestVote.bind(this, true)}>
               Pass
             </button>

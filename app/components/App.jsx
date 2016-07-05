@@ -5,6 +5,9 @@ import GameRoom from './GameRoom.jsx'; //delete!
 import SpectatorRoom from './SpectatorRoom.jsx'; //delete!
 import _ from 'lodash';
 import queryString from 'query-string';
+import globals from '../globals.js'
+const amplifyStore = require('amplify-store');
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -14,6 +17,7 @@ export default class App extends React.Component {
       roomCodes: [],
       currentRoomCode: null,
       players: [], //delete
+      wantsToJoinLastHand: false,
     }
   }
 
@@ -41,7 +45,8 @@ export default class App extends React.Component {
         const room = childSnapshot.val();
         const roomCode = room.roomCode;
         const currTimeInMs = Date.now();
-        if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
+        if (true) {
+        // if (room.dateCreated >= currTimeInMs - 1000*60*60*24*1) {
           rooms.push(room);
         }
       });
@@ -88,9 +93,25 @@ export default class App extends React.Component {
     this.setState(roomCodeObj);
   }
 
+  lastHandClicked(lastHandState) {
+    this.setState(lastHandState);
+    this.wantsToJoinLastHand=true;
+    this.roomCode=lastHandState.roomCode;
+    this.setState({ wantsToJoinLastHand: true })
+    this.populatePlayerState();
+  }
+
   getMainMenu() {
+    const lastHandState = amplifyStore(globals.lastHandStore);
+    const lastHand = (
+      <button type="button" onClick={this.lastHandClicked.bind(this, lastHandState)}>
+        Join last hand
+      </button>
+    );
+
     return (
       <div>
+        { lastHandState ? lastHand : null }
         Create a new game:
         <button type="button" onClick={this.gameClicked.bind(this, null)}>
           New Game
@@ -118,9 +139,16 @@ export default class App extends React.Component {
     return rooms;
   }
 
+  getDefaultRoomCode() {
+    if (this.wantsToJoinLastHand || this.state.wantsToJoinLastHand) {
+      return this.roomCode ? this.roomCode : this.state.roomCode;
+    }
+    return this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary';
+  }
+
   //if debug==true vvvvvv -----------------------------------------------------------------------------------------------
   populatePlayerState() {
-    const ref = new Firebase(`https://avalonline.firebaseio.com/games/cary/players`);
+    const ref = new Firebase(`https://avalonline.firebaseio.com/games/${this.getDefaultRoomCode()}/players`);
     ref.on("value", (snapshot) => {
       let players = [];
       snapshot.forEach((childSnapshot) => {
@@ -131,21 +159,22 @@ export default class App extends React.Component {
       this.setState({'players': players});
     });
   }
+
   getGameRoom() {
     if (this.state.players.length < 3) return null;
     return (
       <GameRoom
-        roomCode={this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary'}
-        isSpectator={this.getURLParams().isSpectator ? true : false}
-        playerName={this.getURLParams().playerName}
+        roomCode={this.getDefaultRoomCode()}
+        playerName={this.state.wantsToJoinLastHand ? this.state.playerName : this.getURLParams().playerName}
         players={this.state.players}
       />
     );
   }
+
   getSpectatorRoom() {
     return (
       <SpectatorRoom
-        roomCode={this.getURLParams().roomCode ? this.getURLParams().roomCode : 'cary'}
+        roomCode={this.getDefaultRoomCode()}
         players={this.state.players}
       />
     );
@@ -159,8 +188,8 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (this.getURLParams().debug) {
-      if (this.getURLParams().isSpectator) {
+    if (this.getURLParams().debug || this.state.wantsToJoinLastHand) {
+      if (this.getURLParams().isSpectator || this.state.isSpectator) {
         return this.getSpectatorRoom();
       }
       return this.getGameRoom();

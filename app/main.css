@@ -18,6 +18,10 @@
   color: black;
 }
 
+.green {
+  color: #76ff76;
+}
+
 input[type=checkbox] {
   /* Double-sized Checkboxes */
   -ms-transform: scale(2); /* IE */

@@ -1,5 +1,7 @@
 var globals = {};
 
+globals.lastHandStore = 'avalon-online-last-hand';
+
 globals.numPlayersOnQuests = (numPlayers) => {
   if (numPlayers === 5) {
     return [2, 3, 2, 3, 3];

@@ -40,6 +40,11 @@ export default class GameRoom extends React.Component {
     });
   }
 
+
+  numPlayersOnQuests() {
+    return globals.numPlayersOnQuests(this.props.players.length);
+  }
+
   getQuestCircles() {
     // this.state.gameState.questResults
     const circles = [];
@@ -96,7 +101,7 @@ export default class GameRoom extends React.Component {
 
       players.push(
         <div className="checkbox-div">
-          <span className={"checkboxtext" + (isLeader ? " bold" : "")} >
+          <span className={"checkboxtext" + (isLeader ? " bold" : "") + (this.playerIsAProposedPlayer(player.playerName) ? " green" : "")} >
             { player.playerName + postStr }
           </span>
           <br/>
@@ -112,95 +117,6 @@ export default class GameRoom extends React.Component {
       </form>
     );
 
-  }
-
-  getProposalVoteDiv() {
-    // console.log(this.state.gameState.isProposalVoting);
-    if (!this.state.gameState.isProposalVoting) {
-
-      if (this.state.gameState.isQuestVoting) {
-
-        const questButtons = (
-          <div>
-            <button type="button" onClick={this.handleQuestVote.bind(this, true)}>
-              Pass
-            </button>
-            <button type="button" onClick={this.handleQuestVote.bind(this, false)}>
-              Fail
-            </button>
-          </div>
-        );
-
-      // this.state.gameState.isQuestVoting
-      // if is quest voting and current player is part of proposed quests list, show questButtons
-
-        const proposedPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
-        const questVotePlayersWhoVoted = globals.fbArr(this.state.gameState.questVotePlayersWhoVoted);
-        const shouldShowVoteButtons = proposedPlayers.indexOf(this.getCurrentPlayer().playerName) != -1 && questVotePlayersWhoVoted.indexOf(this.getCurrentPlayer().playerName) == -1;
-
-        let questVoteResults = globals.fbArr(this.state.gameState.questVoteResults);
-        if (questVoteResults.length == globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]) {
-          this.updateCurrentState({ isQuestVoting: false });
-
-          this.updateCurrentState({ questVoteResults: [] });
-          this.updateCurrentState({ questVotePlayersWhoVoted: [] });
-
-          this.updateCurrentState({ lastQuestVoteResults: _.shuffle(questVoteResults).join(", ") });
-
-          this.advanceQuestLeader();
-
-          let passes = 0;
-          let fails = 0;
-          questVoteResults.forEach( res => {
-            if (res === "Pass") {
-              passes += 1;
-            } else {
-              fails += 1;
-            }
-          });
-
-          let tempResults = this.state.gameState.questResults;
-          const currentQuestNum = this.state.gameState.currentQuestNum
-          if (fails > 0) {
-            tempResults[currentQuestNum] = "Fail";
-          } else {
-            tempResults[currentQuestNum] = "Pass";
-          }
-          this.updateCurrentState({ numProposals: 0 });
-          this.updateCurrentState({ questResults: tempResults });
-          this.updateCurrentState({ currentQuestNum: currentQuestNum + 1 });
-
-        } else {
-          return shouldShowVoteButtons ? questButtons : null;
-        }
-      } else {
-        return <div/>;
-      }
-
-    } else {
-
-      const haveIVoted = this.state.gameState.proposalVotes[this.getCurrentPlayer().playerName] != "n/a"
-
-      const proposalButtons = (
-        <div>
-          <button type="button" onClick={this.handleProposalVote.bind(this, true)}>
-            Approve
-          </button>
-          <button type="button" onClick={this.handleProposalVote.bind(this, false)}>
-            Reject
-          </button>
-        </div>
-      );
-
-      const voteCountHeader = <h3>Votes ({ this.getNumPlayersWhoHaveProposalVoted() }/{this.props.players.length})</h3>
-
-      return (
-        <div>
-          { this.haveAllPlayersProposalVoted() ? null : voteCountHeader }
-          { haveIVoted ? null : proposalButtons }
-        </div>
-      );
-    }
   }
 
   getNumPlayersWhoHaveProposalVoted() {
@@ -220,6 +136,9 @@ export default class GameRoom extends React.Component {
     return this.getNumPlayersWhoHaveProposalVoted() === this.props.players.length;
   }
 
+  playerIsAProposedPlayer(playerName) {
+      return globals.fbArr(this.state.gameState.proposedPlayers).includes(playerName);
+  }
 
   render() {
     return (
@@ -230,9 +149,8 @@ export default class GameRoom extends React.Component {
           <span className='roomCode'>{this.props.roomCode}</span>
         </div>
         { this.getPermanentGameStateDiv() }
-        <h3>{this.state.gameState.questLeader}'s Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{globals.numPlayersOnQuests[this.state.gameState.currentQuestNum]}):</h3>
+        <h3>{this.state.gameState.questLeader}'s Proposed Questees ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
-        { this.getProposalVoteDiv() }
         <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
         <RoleList
           playerCount={this.props.players.length}
