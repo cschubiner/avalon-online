@@ -1,5 +1,7 @@
 # avalon-online
 
+Play it here: [http://cschubiner.github.io/avalon-online/](http://cschubiner.github.io/avalon-online/)
+
 ### Installation
 
     git clone https://github.com/cschubiner/avalon-online.git

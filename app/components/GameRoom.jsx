@@ -178,10 +178,15 @@ export default class GameRoom extends React.Component {
 
   selectedPlayer(selectedPlayerName, e) {
     // if the current player is not the quest leader, they can't check anything
-    if (!this.isMeQuestLeader() || this.state.gameState.isProposalVoting) {
+    if (
+      !this.isMeQuestLeader() ||
+      this.state.gameState.isProposalVoting ||
+      this.state.gameState.isQuestVoting
+    ) {
       e.preventDefault;
       return;
     }
+
     console.log(selectedPlayerName);
     if (!this.playerIsAProposedPlayer(selectedPlayerName)) {
       if (globals.fbArrLen(this.state.gameState.proposedPlayers) < this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
@@ -192,7 +197,6 @@ export default class GameRoom extends React.Component {
         this.updateCurrentState({ proposedPlayers: tempPlayers })
       }
     } else {
-
       let tempPlayers = globals.fbArr(this.state.gameState.proposedPlayers);
 
       const ind = tempPlayers.indexOf(selectedPlayerName);
@@ -207,6 +211,12 @@ export default class GameRoom extends React.Component {
     this.updateCurrentState({
       gameMessage: s,
       gameMessageType: messageType,
+    });
+  }
+
+  setNextActionMessage(s) {
+    this.updateCurrentState({
+      nextActionMessage: s,
     });
   }
 
@@ -234,16 +244,16 @@ export default class GameRoom extends React.Component {
         if (passes >= fails) {
           // console.log("AAAAAAAAAAAAAAAAAAA");
           this.setGameMessage(
-            `Quest is approved (${ratioString})! Quest-goers, choose pass or fail!`,
+            `Quest is approved (${ratioString})!`,
             globals.MESSAGE_GOOD
           );
+          this.setNextActionMessage('Quest-goers, choose pass or fail!')
           this.updateCurrentState({ isQuestVoting: true });
         } else {
           const newLeader = this.advanceQuestLeader();
           // console.log("BBBBBBBBBBBBBBBBBBB");
-          let tempMessage = `Quest is rejected (${ratioString})!`;
-          tempMessage += ` ${newLeader}, propose the next quest!`;
-          this.setGameMessage(tempMessage, globals.MESSAGE_EVIL);
+          this.setGameMessage(`Quest is rejected (${ratioString})!`, globals.MESSAGE_EVIL);
+          this.setNextActionMessage(`${newLeader}, propose the next quest!`)
           this.updateCurrentState({ numProposals: this.state.gameState.numProposals + 1 });
         }
 
@@ -286,9 +296,10 @@ export default class GameRoom extends React.Component {
 
     if (globals.fbArrLen(this.state.gameState.proposedPlayers) == this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]) {
       this.setGameMessage(
-        `Quest is proposed! Everyone, choose 'approve' or 'fail'.`,
+        `Quest is proposed!`,
         globals.MESSAGE_NEUTRAL
       );
+      this.setNextActionMessage("Everyone, choose 'approve' or 'fail'.");
       this.updateCurrentState({ isProposalVoting: true })
     }
 
@@ -332,7 +343,6 @@ export default class GameRoom extends React.Component {
   getProposalVoteDiv() {
     // console.log(this.state.gameState.isProposalVoting);
     if (!this.state.gameState.isProposalVoting) {
-
       if (this.state.gameState.isQuestVoting) {
 
         const questButtons = (
@@ -384,16 +394,11 @@ export default class GameRoom extends React.Component {
             tempResults[currentQuestNum] = "Fail";
             tempMessage += `Quest fails with ${fails} fail${fails === 1 ? '' : 's'}!`;
           } else {
-            if (fails > 0) {
-              tempMessage += `Quest passes with ${fails} fail${fails === 1 ? '' : 's'}!`;
-            }
-            else {
-              tempMessage += `Quest passes!`;
-            }
+            tempMessage += `Quest passes with ${fails} fail${fails === 1 ? '' : 's'}!`;
             tempResults[currentQuestNum] = "Pass";
           }
-          tempMessage += ` ${newLeader}, propose the next quest!`;
           this.setGameMessage(tempMessage, questFailed ? globals.MESSAGE_EVIL : globals.MESSAGE_GOOD);
+          this.setNextActionMessage(`${newLeader}, propose the next quest!`)
           this.updateCurrentState({ numProposals: 0 });
           this.updateCurrentState({ questResults: tempResults });
           this.updateCurrentState({ currentQuestNum: currentQuestNum + 1 });
@@ -467,7 +472,7 @@ export default class GameRoom extends React.Component {
     return (
       <div className={"outer-div"}>
       <div className="inner-div">
-        <h1>Hand Room: {this.props.roomCode}</h1>
+        <h1>Game Room: {this.props.roomCode}</h1>
         { this.getPermanentGameStateDiv() }
         <h3>Proposed Questers by {this.state.gameState.questLeader} ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
@@ -480,8 +485,9 @@ export default class GameRoom extends React.Component {
         <br/>
         <br/>
         <br/>
-        <h2>Up name q: <span className='bold'>{ this.props.playerName }</span></h2>
-        <h2>Up role q: <span className='bold'>{ this.getCurrentPlayer().role }</span></h2>
+        <br/>
+        <h2>Your name is: <span className='bold'>{ this.props.playerName }</span></h2>
+        <h2>Your role is: <span className='bold'>{ this.getCurrentPlayer().role }</span></h2>
         <YourInfo
           players={this.props.players}
           playerName={this.props.playerName}

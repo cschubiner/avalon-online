@@ -59,7 +59,7 @@ export default class GameRoom extends React.Component {
         </div>
       );
 
-      i+=1;
+      i += 1;
     });
     return circles;
   }
@@ -161,6 +161,17 @@ export default class GameRoom extends React.Component {
     );
   }
 
+  renderNextActionMessage() {
+    if (!this.state.gameState.nextActionMessage) return null;
+
+    const messageClass = globals.MESSAGE_NEUTRAL;
+
+    return (
+      <h4 className={`gameMessage ${messageClass}`}>{this.state.gameState.nextActionMessage}</h4>
+    );
+  }
+
+
   render() {
     const recentVoteResults = (
       <h3>Most Recent Vote Results: { this.state.gameState.lastQuestVoteResults }</h3>
@@ -174,6 +185,7 @@ export default class GameRoom extends React.Component {
         </div>
         { this.getPermanentGameStateDiv() }
         { this.renderGameMessage() }
+        { this.renderNextActionMessage() }
         <h3>{this.state.gameState.questLeader}'s Proposed Questers ({globals.fbArrLen(this.state.gameState.proposedPlayers)}/{this.numPlayersOnQuests()[this.state.gameState.currentQuestNum]}):</h3>
         { this.getPlayerList() }
         { this.state.gameState.lastQuestVoteResults !== 'n/a' ? recentVoteResults : null }
